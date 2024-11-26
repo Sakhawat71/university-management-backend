@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
+    "start": "nodemon ./dist/server.js",
+    "tsdev": "tsnd --respawn ./src/server.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "sakhawat",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
     "nodemon": "^3.1.7",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.7.2"
