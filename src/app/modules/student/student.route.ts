@@ -1,0 +1,9 @@
+import express from 'express';
+import { studentController } from './student.controller';
+
+const route = express.Router();
+
+
+route.get('/', studentController.getAllStduents);
+
+export const studentRouter = route;
