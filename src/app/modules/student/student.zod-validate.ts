@@ -25,7 +25,7 @@ const LocalGuardianValidateSchema = z.object({
 export const StudentValidateSchema = z.object({
   id: z.string().min(1, { message: "Student ID is required" }),
   user: z.string().regex(/^[a-fA-F0-9]{24}$/, { message: "User must be a valid ObjectId" }), // Validate ObjectId
-  password: z.string().max(20,{message: "Password cannot longer than 20 character"}).min(6, { message: "Password must be at least 6 characters long" }),
+  // password: z.string().max(20,{message: "Password cannot longer than 20 character"}).min(6, { message: "Password must be at least 6 characters long" }),
   name: UserNameValidateSchema,
   gender: z.enum(["male", "female", "other"], { message: "Gender must be 'male', 'female', or 'other'" }),
   dateOfBirth: z.string().optional(),

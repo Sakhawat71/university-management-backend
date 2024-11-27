@@ -1,14 +1,19 @@
 import mongoose, { Schema, model } from "mongoose";
-import { IStudent } from "./student.interface";
+import {
+  IGuardian,
+  ILocalGuardian,
+  IStudent,
+  IUserName
+} from "./student.interface";
 
 
-const UserNameSchema = new Schema({
+const UserNameSchema = new Schema<IUserName>({
   firstName: { type: String, required: true },
   middleName: { type: String },
   lastName: { type: String, required: true },
 });
 
-const GuardianSchema = new Schema({
+const GuardianSchema = new Schema<IGuardian>({
   fatherName: { type: String, required: true },
   fatherOccupation: { type: String, required: true },
   fatherContactNo: { type: String, required: true },
@@ -17,7 +22,7 @@ const GuardianSchema = new Schema({
   motherContactNo: { type: String, required: true },
 });
 
-const LocalGuardianSchema = new Schema({
+const LocalGuardianSchema = new Schema<ILocalGuardian>({
   name: { type: String, required: true },
   occupation: { type: String, required: true },
   contactNo: { type: String, required: true },
@@ -27,7 +32,7 @@ const LocalGuardianSchema = new Schema({
 const StudentSchema = new Schema<IStudent>({
   id: { type: String, required: true, unique: true },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  password: { type: String, required: true },
+  // password: { type: String, required: true },
   name: { type: UserNameSchema, required: true },
   gender: { type: String, enum: ["male", "female", "other"], required: true },
   dateOfBirth: { type: String },
@@ -46,13 +51,13 @@ const StudentSchema = new Schema<IStudent>({
 });
 
 
-StudentSchema.pre('find', function(next){
-  this.find({isDeleted : {$ne : true}})
+StudentSchema.pre('find', function (next) {
+  this.find({ isDeleted: { $ne: true } })
   next()
 })
 
-StudentSchema.pre('findOne',function(next){
-  this.findById({isDelete : {$ne : true}})
+StudentSchema.pre('findOne', function (next) {
+  this.findById({ isDelete: { $ne: true } })
   next()
 })
 
