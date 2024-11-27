@@ -2,7 +2,7 @@ import { Types } from "mongoose";
 
 export interface IUserName {
     firstName: string;
-    middleName: string;
+    middleName?: string | undefined;
     lastName: string;
 }
 
@@ -24,7 +24,7 @@ export interface ILocalGuardian {
 
 export interface IStudent {
     id: string;
-    user: Types.ObjectId;
+    user: Types.ObjectId | string;
     password: string;
     name: IUserName;
     gender: 'male' | 'female' | 'other';
