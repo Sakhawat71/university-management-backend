@@ -64,8 +64,50 @@ const getSingleStudent = async (
     }
 };
 
+const updateStudent = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { id } = req.params;
+        const updatedStudentData = req.body;
+
+        if (!updatedStudentData || Object.keys(updatedStudentData).length === 0) {
+            res.status(400).json({
+                message: "No update data provided",
+                success: false,
+                data: null,
+            });
+            return;
+        }
+
+        const result = await studentService.updatedStudentIntoDb(id, updatedStudentData);
+
+        if (!result) {
+            res.status(404).json({
+                message: "Student not found",
+                success: false,
+                date: null,
+            });
+            return;
+        }
+
+        res.status(201).json({
+            message: "Student updated successfully",
+            success: true,
+            data: result,
+        })
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+
 export const studentController = {
     getAllStduents,
     createStudent,
     getSingleStudent,
+    updateStudent,
 } 

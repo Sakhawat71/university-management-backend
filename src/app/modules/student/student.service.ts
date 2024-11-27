@@ -14,9 +14,14 @@ const getSingleStudentById = async (id : string) => {
     return await StudentModel.findById(id);
 }
 
+const updatedStudentIntoDb = async (id: string,updatedValue : object) => {
+    return await StudentModel.findByIdAndUpdate(id,updatedValue,{new : true});
+}
+
 
 export const studentService = {
     getStudentsFromDb,
     createStudentIntoDb,
     getSingleStudentById,
+    updatedStudentIntoDb,
 }
