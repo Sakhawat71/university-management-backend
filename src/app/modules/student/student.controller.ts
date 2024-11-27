@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { studentService } from "./student.service";
 import { StudentValidateSchema } from "./student.zod-validate";
 
-
+// create student
 const createStudent = async (
     req: Request,
     res: Response,
@@ -45,7 +45,7 @@ const getAllStduents = async (
     }
 };
 
-
+// get specific Individual data by id
 const getSingleStudent = async (
     req: Request,
     res: Response,
@@ -64,6 +64,7 @@ const getSingleStudent = async (
     }
 };
 
+// update Existing student data
 const updateStudent = async (
     req: Request,
     res: Response,
@@ -91,16 +92,46 @@ const updateStudent = async (
                 date: null,
             });
             return;
-        }
+        };
 
         res.status(201).json({
             message: "Student updated successfully",
             success: true,
             data: result,
-        })
+        });
 
     } catch (error) {
         next(error)
+    }
+}
+
+// delete student as isDelete true
+const deleteStudent = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    try {
+        const { id } = req.params;
+        const result = await studentService.deleteStudentById(id);
+
+        if (!result) {
+            res.status(404).json({
+                message: "Student not found",
+                success: false,
+                date: null,
+            });
+            return;
+        }
+
+        res.status(201).json({
+            message: "Student delete successfully",
+            success: true,
+            data: {},
+        });
+
+    } catch (error) {
+        next(error);
     }
 }
 
@@ -110,4 +141,5 @@ export const studentController = {
     createStudent,
     getSingleStudent,
     updateStudent,
+    deleteStudent,
 } 
