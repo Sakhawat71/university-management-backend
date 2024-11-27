@@ -45,4 +45,22 @@ const StudentSchema = new Schema<IStudent>({
   timestamps: true,
 });
 
+
+StudentSchema.pre('find', function(next){
+  this.find({isDeleted : {$ne : true}})
+  next()
+})
+
+StudentSchema.pre('findOne',function(next){
+  this.findById({isDelete : {$ne : true}})
+  next()
+})
+
+// aggregate block
+StudentSchema.pre('aggregate', function (next) {
+  this.pipeline().unshift({ $match: { isDeleted: { $ne: true } } })
+  next()
+})
+
+
 export const StudentModel = model<IStudent>("Student", StudentSchema);
