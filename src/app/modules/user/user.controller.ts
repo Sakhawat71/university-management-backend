@@ -11,10 +11,10 @@ const createStudent = async (
 
 ) => {
     try {
-        const studentData = req.body;
-        const validateNewStudent = StudentValidateSchema.parse(studentData);
+        const { password , student: studentData } = req.body;
+        // const validateNewStudent = StudentValidateSchema.parse(studentData);
 
-        const result = await userService.createStudentIntoDb(validateNewStudent);
+        const result = await userService.createStudentIntoDb(password,studentData);
         res.status(201).json({
             success: true,
             message: 'Student is created succesfully',
