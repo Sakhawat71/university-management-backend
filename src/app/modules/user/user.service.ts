@@ -10,7 +10,7 @@ const createStudentIntoDb = async (password: string, studentData: IStudent) => {
     const user: Partial<IUser> = {};
     user.password = password || config.default_pass as string;
     user.role = "student";
-    user.id = '20300100001';
+    user.id = '20300100002';
 
     const newUser = await UserModel.create(user);
 
