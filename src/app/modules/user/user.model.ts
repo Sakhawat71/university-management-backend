@@ -1,5 +1,7 @@
 import { model, Schema } from "mongoose";
 import { IUser } from "./user.interface";
+import bcrypt from 'bcrypt';
+import config from "../../config";
 
 const userSchema = new Schema<IUser>({
     id: {
@@ -22,7 +24,7 @@ const userSchema = new Schema<IUser>({
     status: {
         type: String,
         enum: ["in-progress", "blocked"],
-        default : "in-progress",
+        default: "in-progress",
     },
     isDeleted: {
         type: Boolean,
@@ -32,4 +34,20 @@ const userSchema = new Schema<IUser>({
     timestamps: true,
 })
 
-export const UserModel = model<IUser>('User',userSchema); 
+// user passworrd hashing 
+userSchema.pre('save', async function (next) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const user = this;
+    user.password = await bcrypt.hash(
+        user.password,
+        Number(config.bcrypt_salt_round),
+    );
+    next();
+});
+
+userSchema.post("save", function (doc, next) {
+    doc.password = "";
+    next();
+})
+
+export const UserModel = model<IUser>('User', userSchema); 
