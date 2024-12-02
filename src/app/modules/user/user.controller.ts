@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { StudentValidateSchema } from "../student/student.zod-validate";
+// import { StudentValidateSchema } from "../student/student.zod-validate";
 import { userService } from "./user.service";
 
 
@@ -25,6 +25,6 @@ const createStudent = async (
     }
 }
 
-export const UserController = {
+export const userController = {
     createStudent,
 }

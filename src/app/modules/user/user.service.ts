@@ -1,5 +1,6 @@
 import config from "../../config";
 import { IStudent } from "../student/student.interface";
+import { StudentModel } from "../student/student.model";
 import { IUser } from "./user.interface";
 import { UserModel } from "./user.model";
 
@@ -11,13 +12,15 @@ const createStudentIntoDb = async (password: string, studentData: IStudent) => {
     user.role = "student";
     user.id = '20300100001';
 
-    const result = await UserModel.create(user);
+    const newUser = await UserModel.create(user);
 
-    if(Object.keys(result).length){
-        studentData.id = result.id;
-        studentData.user = result._id;
+    if(Object.keys(newUser).length){
+        studentData.id = newUser.id;
+        studentData.user = newUser._id;
+
+        const newStudent = await StudentModel.create(studentData);
+        return newStudent;
     }
-    
 }
 
 
