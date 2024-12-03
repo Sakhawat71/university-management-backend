@@ -11,33 +11,24 @@ const catchAsync = (func: RequestHandler) => {
         res: Response,
         next: NextFunction
     ) => {
-        Promise.resolve(func(req,res,next)).catch((error) => next(error));
+        Promise.resolve(func(req, res, next)).catch((error) => next(error));
     }
 };
 
 
 // create student 
-const createStudent = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
+const createStudent = catchAsync(async (req, res, next) => {
 
-) => {
-    try {
-        const { password, student: studentData } = req.body;
-        // const validateNewStudent = StudentValidateSchema.parse(studentData);
-
-        const result = await userService.createStudentIntoDb(password, studentData);
-        sendResponse(res, {
-            statusCode: StatusCodes.OK,
-            success: true,
-            message: 'Student is created succesfully',
-            data: result
-        })
-    } catch (error) {
-        next(error)
-    }
-}
+    const { password, student: studentData } = req.body;
+    // const validateNewStudent = StudentValidateSchema.parse(studentData);
+    const result = await userService.createStudentIntoDb(password, studentData);
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Student is created succesfully',
+        data: result
+    })
+})
 
 export const userController = {
     createStudent,
