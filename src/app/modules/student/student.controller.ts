@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { RequestHandler } from "express";
 import { studentService } from "./student.service";
 // import { StudentValidateSchema } from "./student.zod-validate";
 
@@ -28,11 +28,7 @@ import { studentService } from "./student.service";
 
 
 // get all stduents 
-const getAllStduents = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-) => {
+const getAllStduents: RequestHandler = async (req, res, next) => {
     try {
         const result = await studentService.getStudentsFromDb();
         res.json({
@@ -46,11 +42,7 @@ const getAllStduents = async (
 };
 
 // get specific Individual data by id
-const getSingleStudent = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+const getSingleStudent: RequestHandler = async (req, res, next) => {
     try {
         const { id } = req.params;
         const result = await studentService.getSingleStudentById(id);
@@ -65,11 +57,7 @@ const getSingleStudent = async (
 };
 
 // update Existing student data
-const updateStudent = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+const updateStudent: RequestHandler = async (req, res, next) => {
     try {
         const { id } = req.params;
         const updatedStudentData = req.body;
@@ -106,11 +94,7 @@ const updateStudent = async (
 }
 
 // delete student as isDelete true
-const deleteStudent = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-) => {
+const deleteStudent: RequestHandler = async (req, res, next) => {
     try {
         const { id } = req.params;
         const result = await studentService.deleteStudentById(id);
