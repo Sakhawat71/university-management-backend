@@ -1,8 +1,19 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 // import { StudentValidateSchema } from "../student/student.zod-validate";
 import { userService } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
+
+
+const catchAsync = (func: RequestHandler) => {
+    return (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => {
+        Promise.resolve(func(req,res,next)).catch((error) => next(error));
+    }
+};
 
 
 // create student 
