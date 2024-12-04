@@ -20,8 +20,14 @@ const getAllAcademicSemesterFormDb = async () => {
     return await AcademicSemesterModel.find();
 }
 
+// find by id
+const getSingleAcademicSemesterFromDb = async (id: string) => {
+    return await AcademicSemesterModel.findById(id);
+}
 
 export const academicSemesterServiceses = {
     createAcademicSemesterIntoDb,
     getAllAcademicSemesterFormDb,
+    getSingleAcademicSemesterFromDb,
+
 }
