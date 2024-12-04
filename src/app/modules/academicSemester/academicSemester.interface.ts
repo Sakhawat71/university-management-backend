@@ -12,8 +12,8 @@ export type TMonths =
     | 'November'
     | 'December';
 
-type TName = "Autumn" | "Summer" | "Fall";
-type TCode =  "1" | "2" | "3";
+export type TName = "Autumn" | "Summer" | "Fall";
+export type TCode =  "1" | "2" | "3";
 
 export interface IAcademicSemester {
     name: TName;
