@@ -22,3 +22,7 @@ export interface IAcademicSemester {
     startMonth: TMonths;
     endMonth: TMonths;
 };
+
+export interface IAcademicSemesterNameCodeMapper {
+    [key : string] : string
+}
