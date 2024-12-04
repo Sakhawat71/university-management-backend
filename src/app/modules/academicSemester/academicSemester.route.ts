@@ -19,7 +19,12 @@ router.get(
 router.get(
     '/:id',
     academicSemesterController.getSingleAcademicSemester
-)
+);
+
+router.patch(
+    '/:id',
+    academicSemesterController.updaetAcademicSemester
+);
 
 
 export const academicSemesterRouters = router;
