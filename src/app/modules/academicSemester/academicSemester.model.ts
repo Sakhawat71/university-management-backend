@@ -16,7 +16,7 @@ const academicSemesterSchema = new Schema<IAcademicSemester>({
         required : true,
     },
     year: {
-        type: Date,
+        type: String,
         required: true,
     },
     startMonth: {
@@ -29,6 +29,8 @@ const academicSemesterSchema = new Schema<IAcademicSemester>({
         enum: AcademicSemesterMonths,
         required: true,
     }
+},{
+    timestamps : true,
 })
 
 const AcademicSemesterModel = model<IAcademicSemester>('AcademicSemester', academicSemesterSchema);

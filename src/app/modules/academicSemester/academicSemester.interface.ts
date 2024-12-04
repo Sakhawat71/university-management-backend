@@ -18,7 +18,7 @@ export type TCode =  "1" | "2" | "3";
 export interface IAcademicSemester {
     name: TName;
     code: TCode;
-    year: Date;
+    year: string;
     startMonth: TMonths;
     endMonth: TMonths;
 };
