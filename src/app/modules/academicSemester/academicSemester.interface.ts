@@ -25,4 +25,10 @@ export interface IAcademicSemester {
 
 export interface IAcademicSemesterNameCodeMapper {
     [key : string] : string
-}
+};
+
+export const academicSemesterNameCodeMapper: IAcademicSemesterNameCodeMapper = {
+    Autumn: "1",
+    Summer: "2",
+    Fall: "3",
+};

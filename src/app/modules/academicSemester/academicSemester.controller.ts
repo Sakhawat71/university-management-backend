@@ -29,6 +29,8 @@ const getAllAcademicSemesters = catchAsync(async (req, res) => {
 //find by id -> get single academic Semester
 const getSingleAcademicSemester = catchAsync(async (req, res) => {
     const { id } = req.params;
+       
+
     const result = await academicSemesterServiceses.getSingleAcademicSemesterFromDb(id);
 
     sendResponse(res, {
