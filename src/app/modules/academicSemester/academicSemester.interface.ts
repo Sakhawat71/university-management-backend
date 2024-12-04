@@ -1,4 +1,4 @@
-type TMonths =
+export type TMonths =
     | 'January'
     | 'February'
     | 'March'
