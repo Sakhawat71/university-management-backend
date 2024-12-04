@@ -13,7 +13,7 @@ export type TMonths =
     | 'December';
 
 export type TName = "Autumn" | "Summer" | "Fall";
-export type TCode =  "1" | "2" | "3";
+export type TCode =  "01" | "02" | "03";
 
 export interface IAcademicSemester {
     name: TName;
@@ -28,7 +28,7 @@ export interface IAcademicSemesterNameCodeMapper {
 };
 
 export const academicSemesterNameCodeMapper: IAcademicSemesterNameCodeMapper = {
-    Autumn: "1",
-    Summer: "2",
-    Fall: "3",
+    Autumn: "01",
+    Summer: "02",
+    Fall: "03",
 };

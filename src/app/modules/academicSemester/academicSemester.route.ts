@@ -23,6 +23,7 @@ router.get(
 
 router.patch(
     '/:id',
+    validateRequest(AcademicSemesterValidation.updateAcademicSemesterValidation),
     academicSemesterController.updaetAcademicSemester
 );
 

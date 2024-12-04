@@ -38,6 +38,7 @@ export const StudentValidateSchema = z.object({
             guardian: GuardianValidateSchema,
             localGuardian: LocalGuardianValidateSchema,
             profileImg: z.string().url({ message: "Invalid URL for profile image" }).optional(),
+            admissionSemester : z.string(),
         })
     })
 });

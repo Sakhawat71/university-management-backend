@@ -16,7 +16,7 @@ export const AcademicSemesterMonths: TMonths[] = [
 ];
 
 export const AcademicSemesterName: TName[] = ['Autumn', 'Summer', 'Fall'];
-export const AcademicSemesterCode: TCode[] = ['1', '2', '3'];
+export const AcademicSemesterCode: TCode[] = ['01', '02', '03'];
 
 // why this page ?
 // Because, This part I will use model and zod Validation.
