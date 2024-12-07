@@ -8,12 +8,22 @@ const findLastStudentId = async () => {
     )
         .sort({ createdAt: -1 })
         .lean();
-
-    return lastStudent?.id ? lastStudent.id.substring(6) : undefined;
+    return lastStudent?.id ? lastStudent.id : undefined;
 }
 
 export const generateStudentId = async (payload: IAcademicSemester): Promise<string> => {
-    const curretnId = await findLastStudentId() || (0).toString();
-    const incrementId = (parseFloat(curretnId) + 1).toString().padStart(4, '0');
+
+    let curretnId = (0).toString();
+    const lastStudentId = await findLastStudentId();
+    const lastStudentYear = lastStudentId?.substring(4);
+    const lastStudentSemesterCode = lastStudentId?.substring(4,6);
+    const currentYear = payload.year;
+    const currentSemesterCode = payload.code;
+
+    if(lastStudentId && lastStudentYear === currentYear && lastStudentSemesterCode === currentSemesterCode){
+        curretnId = lastStudentId.substring(6)
+    }
+
+    const incrementId = (Number(curretnId) + 1).toString().padStart(4, '0');
     return `${payload.year}${payload.code}${incrementId}`;
 }
