@@ -5,7 +5,8 @@ const academicFacultySchema = new Schema<IAcademicFaculty>({
     name : {
         type : String,
         required : true,
+        unique : true,
     }
 })
 
-export const AcademicSemesterModel = model<IAcademicFaculty>('AcademicSemester',academicFacultySchema);
+export const AcademicFacultyModel = model<IAcademicFaculty>('AcademicFaculty',academicFacultySchema);
