@@ -23,7 +23,7 @@ const routersModule = [
         path: "/academic-faculties",
         route: academicFacultyRoutes,
     }
-]
+];
 
 routersModule.forEach((r) => router.use(r.path, r.route));
 
