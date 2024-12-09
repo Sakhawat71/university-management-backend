@@ -33,7 +33,7 @@ const deleteAcademicFacultyFromDB = async (id: string) => {
     return await AcademicFacultyModel.findByIdAndDelete(id);
 }
 
-export const academicFacultySercice = {
+export const academicFacultyService = {
     createAcademicFacultyIntoDB,
     getAllAcademicFacultiesFromDB,
     getSingleAcademicFacultyFromDB,
