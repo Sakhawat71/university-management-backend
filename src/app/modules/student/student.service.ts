@@ -7,7 +7,7 @@ import { StudentModel } from './student.model';
 // }
 
 const getStudentsFromDb = async () => {
-    return await StudentModel.find();
+    return await StudentModel.find().populate('admissionSemester');
 }
 
 const getSingleStudentById = async (id: string) => {
