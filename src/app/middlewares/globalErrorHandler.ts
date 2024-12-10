@@ -10,7 +10,7 @@ const globalErrorHandler = async (
     next: NextFunction
 ) : Promise<any> => {
 
-    const statusCode = 500;
+    const statusCode = err.statusCodes || 500;
     const message = err.message || "Something went wrong !";
 
     return res.status(statusCode).json({
