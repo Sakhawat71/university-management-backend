@@ -1,6 +1,7 @@
 import { RequestHandler } from "express";
 import { studentService } from "./student.service";
-// import { StudentValidateSchema } from "./student.zod-validate";
+import catchAsync from "../../utils/catchAsync";
+import { StudentModel } from "./student.model";
 
 // create student
 // const createStudent = async (
@@ -97,8 +98,17 @@ const updateStudent: RequestHandler = async (req, res, next) => {
 const deleteStudent: RequestHandler = async (req, res, next) => {
     try {
         const { id } = req.params;
-        const result = await studentService.deleteStudentById(id);
+        const isStudentExist = await StudentModel.findOne({ id, isDeleted: { $ne: true } });
+        if (!isStudentExist) {
+             res.status(404).json({
+                message: "Student not found or already deleted",
+                success: false,
+                data: null,
+            });
+            return;
+        };
 
+        const result = await studentService.deleteStudentById(id);
         if (!result) {
             res.status(404).json({
                 message: "Student not found",
@@ -106,7 +116,7 @@ const deleteStudent: RequestHandler = async (req, res, next) => {
                 date: null,
             });
             return;
-        }
+        };
 
         res.status(201).json({
             message: "Student delete successfully",

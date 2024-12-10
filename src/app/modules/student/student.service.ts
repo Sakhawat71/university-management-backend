@@ -29,10 +29,12 @@ const getSingleStudentById = async (id: string) => {
     ;
 }
 
+// update student 
 const updatedStudentIntoDb = async (id: string, updatedValue: object) => {
     return await StudentModel.findByIdAndUpdate(id, updatedValue, { new: true });
 }
 
+// delete student
 const deleteStudentById = async (id: string) => {
     // transaction & rollback
     const session = await mongoose.startSession();
@@ -61,6 +63,7 @@ const deleteStudentById = async (id: string) => {
 
         await session.commitTransaction();
         await session.endSession();
+        return deletedStudent;
 
     } catch (error) {
         await session.abortTransaction();
