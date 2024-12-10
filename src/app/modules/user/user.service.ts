@@ -18,15 +18,13 @@ const createStudentIntoDb = async (password: string, payload: IStudent) => {
     const admissionSemesterData = await AcademicSemesterModel.findById(payload.admissionSemester);
 
     // implement transaction & rollback
-
     // create session
     const session = await mongoose.startSession();
 
     try {
         session.startTransaction();
         user.id = await generateStudentId(admissionSemesterData);
-
-        // use
+        // user create
         const newUser = await UserModel.create([user], { session });
         if (!newUser.length) {
             throw new AppError(StatusCodes.BAD_REQUEST, 'Fail to create user', '')
@@ -48,6 +46,7 @@ const createStudentIntoDb = async (password: string, payload: IStudent) => {
     } catch (error) {
         await session.abortTransaction();
         await session.endSession();
+        throw error;
     }
 }
 

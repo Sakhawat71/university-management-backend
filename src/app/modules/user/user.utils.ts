@@ -15,7 +15,7 @@ export const generateStudentId = async (payload: IAcademicSemester): Promise<str
 
     let curretnId = (0).toString();
     const lastStudentId = await findLastStudentId();
-    const lastStudentYear = lastStudentId?.substring(4);
+    const lastStudentYear = lastStudentId?.substring(0,4);
     const lastStudentSemesterCode = lastStudentId?.substring(4,6);
     const currentYear = payload.year;
     const currentSemesterCode = payload.code;
