@@ -65,7 +65,7 @@ StudentSchema.pre('find', function (next) {
 })
 
 StudentSchema.pre('findOne', function (next) {
-  this.findById({ isDelete: { $ne: true } })
+  this.findOne({ isDelete: { $ne: true } })
   next()
 })
 
