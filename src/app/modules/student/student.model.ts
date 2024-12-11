@@ -39,7 +39,7 @@ const StudentSchema = new Schema<IStudent>({
   email: { type: String, required: true, unique: true },
   contactNo: { type: String, required: true },
   emergencyContactNo: { type: String, required: true },
-  bloogGroup: { type: String, enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] },
+  bloodGroup: { type: String, enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] },
   presentAddress: { type: String, required: true },
   permanentAddress: { type: String, required: true },
   guardian: { type: GuardianSchema, required: true },
