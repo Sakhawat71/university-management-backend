@@ -67,7 +67,6 @@ const updateStudent = catchAsync(async (req, res) => {
     });
 });
 
-
 // delete student as isDelete true
 const deleteStudent: RequestHandler = async (req, res, next) => {
     try {
