@@ -2,8 +2,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ErrorRequestHandler } from "express";
-import { ZodError, ZodIssue } from "zod";
+import { ZodError } from "zod";
 import { TErrorSource } from "../interface/error";
+import config from "../config";
+import { handelZodError } from "../errors/handelZodError";
 
 const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next): Promise<any> => {
     //setting default values
@@ -15,23 +17,6 @@ const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next): Pro
             message: 'Something went wrong'
         },
     ];
-
-
-    // zod error Management
-    const handelZodError = (error : ZodError) => {
-        const errorSources : TErrorSource = error.issues.map((issue: ZodIssue) => {
-            return {
-                path : issue?.path[issue.path.length-1],
-                message : issue.message,
-            }
-        })
-        const statusCode = 400;
-        return {
-            statusCode,
-            message: 'zod validation error',
-            errorSources,
-        }
-    };
 
     // instance of -> All kind of error
     if (err instanceof ZodError) {
@@ -46,7 +31,8 @@ const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next): Pro
         success: false,
         message,
         errorSources,
-        error: err,
+        stack: config.NODE_ENV === 'development' ? err?.stack : null,
+        // error: err,
     })
 }
 export default globalErrorHandler;
