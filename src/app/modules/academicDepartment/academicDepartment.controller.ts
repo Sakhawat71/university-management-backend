@@ -59,7 +59,7 @@ const deleteAcademicDepartment = catchAsync(async (req, res) => {
         message: 'Academic Department Deleted successfully',
         data: result
     });
-})
+});
 
 
 export const academicDepartmentController = {

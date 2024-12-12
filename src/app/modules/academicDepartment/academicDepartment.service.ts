@@ -25,7 +25,7 @@ const updateAcademicDepartmentIntoDB = async (
         id,
         payLoad,
         { new: true }
-    );
+    ); 
 };
 
 // delete one by id // Direct delete
