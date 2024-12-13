@@ -23,23 +23,25 @@ const academicDepartmentSchema = new Schema<IAcademicDepartment>(
 );
 
 // Mongoose Middlewares -> Pre-save Middleware
-academicDepartmentSchema.pre('findOne', async function (next) {
+
+academicDepartmentSchema.pre("save", async function (next) {
     try {
-        const isDepartmentExist = await AcademicDepartmentModel.findOne(
-            {
-                name: this.name
-            }
-        );
+        const isDepartmentExist = await AcademicDepartmentModel.findOne({ name: this.name });
         if (isDepartmentExist) {
-            throw new AppError(StatusCodes.NOT_FOUND, "This department is already exist!",'')
-        }
+            throw new AppError(
+                StatusCodes.BAD_REQUEST,
+                "This department already exists!",
+                ""
+            );
+        };
         next();
     } catch (error) {
         next(error as any);
     }
 });
 
-academicDepartmentSchema.pre('findOne', async function (next) {
+// Pre-Find Middleware
+academicDepartmentSchema.pre('findOneAndUpdate', async function (next) {
     try {
         const query = this.getQuery();
         const isDepartmentExist = await AcademicDepartmentModel.findOne({

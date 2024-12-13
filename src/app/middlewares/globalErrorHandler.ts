@@ -44,7 +44,7 @@ const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next): Pro
         message,
         errorSources,
         stack: config.NODE_ENV === 'development' ? err?.stack : null,
-        mainError: err,
+        // mainError: err,
     })
 }
 export default globalErrorHandler;
