@@ -8,13 +8,22 @@ import router from './app/router';
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/v1',router);
+app.use('/api/v1', router);
 
 app.get("/", (req: Request, res: Response) => {
     res.status(200).send({
         status: 200,
         message: "ph university server runnig ....... ..... ..... .... .."
     })
+});
+
+// console.log(z);
+app.get("/test", async(req: Request, res: Response) => {
+
+    // Promise.reject(new Error('Simulated Unhandled Rejection'));
+    // console.log(x);
+    const a : string = 'testing....'
+    res.send(a);
 });
 
 app.use(globalErrorHandler);
