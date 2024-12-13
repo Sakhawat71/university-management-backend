@@ -11,7 +11,7 @@ const createAcademicDepartment = catchAsync(async (req, res) => {
         success: true,
         message: 'Academic Department is created succesfully',
         data: result
-    })
+    });
 });
 
 //get all

@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { model, Schema } from "mongoose";
 import IAcademicDepartment from "./academicDepartment.interface";
 import AppError from "../../errors/appError";
+import { StatusCodes } from "http-status-codes";
 
 const academicDepartmentSchema = new Schema<IAcademicDepartment>(
     {
@@ -21,25 +23,35 @@ const academicDepartmentSchema = new Schema<IAcademicDepartment>(
 );
 
 // Mongoose Middlewares -> Pre-save Middleware
-academicDepartmentSchema.pre('save', async function (next) {
-    const isDepartmentExist = await AcademicDepartmentModel.findOne({
-        name: this.name
-    });
-    if (isDepartmentExist) {
-        throw new AppError(404,"This department is already exist!",'')
+academicDepartmentSchema.pre('findOne', async function (next) {
+    try {
+        const isDepartmentExist = await AcademicDepartmentModel.findOne(
+            {
+                name: this.name
+            }
+        );
+        if (isDepartmentExist) {
+            throw new AppError(StatusCodes.NOT_FOUND, "This department is already exist!",'')
+        }
+        next();
+    } catch (error) {
+        next(error as any);
     }
-    next()
 });
 
 academicDepartmentSchema.pre('findOne', async function (next) {
-    const query = this.getQuery();
-    const isDepartmentExist = await AcademicDepartmentModel.findOne({
-        query
-    });
-    if (!isDepartmentExist) {
-        throw new AppError(404,"This department dose not exist!",'')
+    try {
+        const query = this.getQuery();
+        const isDepartmentExist = await AcademicDepartmentModel.findOne({
+            query
+        });
+        if (!isDepartmentExist) {
+            throw new AppError(404, "This department dose not exist!", "")
+        }
+        next();
+    } catch (error) {
+        next(error as undefined);
     }
-    next();
 });
 
 export const AcademicDepartmentModel = model<IAcademicDepartment>(

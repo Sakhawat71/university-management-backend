@@ -29,7 +29,7 @@ const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next): Pro
         const simplifiedError = handelValidationError(err);
         statusCode = simplifiedError?.statusCode;
         message = simplifiedError?.message;
-        errorSources = simplifiedError?.errroSources;
+        errorSources = simplifiedError?.errorSources;
     }
 
     // Ultimate return
