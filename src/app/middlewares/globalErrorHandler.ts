@@ -7,6 +7,7 @@ import { TErrorSource } from "../interface/error";
 import config from "../config";
 import { handelZodError } from "../errors/handelZodError";
 import handelValidationError from "../errors/handelValidationError";
+import handelCastErrro from "../errors/handelCastError";
 
 const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next): Promise<any> => {
     //setting default values
@@ -30,6 +31,11 @@ const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next): Pro
         statusCode = simplifiedError?.statusCode;
         message = simplifiedError?.message;
         errorSources = simplifiedError?.errorSources;
+    }else if(err?.name === 'CastError'){
+        const simplifiedError = handelCastErrro(err);
+        statusCode = simplifiedError.statusCode;
+        message = simplifiedError.message;
+        errorSources = simplifiedError.errorSources;
     }
 
     // Ultimate return
@@ -38,7 +44,7 @@ const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next): Pro
         message,
         errorSources,
         stack: config.NODE_ENV === 'development' ? err?.stack : null,
-        // mainError: err,
+        mainError: err,
     })
 }
 export default globalErrorHandler;
