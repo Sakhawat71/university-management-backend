@@ -7,18 +7,28 @@ import { StatusCodes } from "http-status-codes";
 
 
 // get all stduents 
-const getAllStduents: RequestHandler = async (req, res, next) => {
-    try {
-        const result = await studentService.getStudentsFromDb();
-        res.json({
-            success: true,
-            message: 'Student are retrieved succesfully',
-            data: result,
-        })
-    } catch (error) {
-        next(error);
-    }
-};
+// const getAllStduents: RequestHandler = async (req, res, next) => {
+//     try {
+//         const result = await studentService.getStudentsFromDb();
+//         res.json({
+//             success: true,
+//             message: 'Student are retrieved succesfully',
+//             data: result,
+//         })
+//     } catch (error) {
+//         next(error);
+//     }
+// };
+
+const getAllStduents = catchAsync(async (req, res) => {
+    const {searchTerm} = req.query;
+    const result = await studentService.getStudentsFromDb(searchTerm as string);
+    res.json({
+        success: true,
+        message: 'Student are retrieved succesfully',
+        data: result,
+    })
+})
 
 // get specific Individual data by id
 const getSingleStudent: RequestHandler = async (req, res, next) => {
@@ -60,7 +70,7 @@ const updateStudent = catchAsync(async (req, res) => {
     };
 
     sendResponse(res, {
-        statusCode : StatusCodes.OK,
+        statusCode: StatusCodes.OK,
         message: "Student updated successfully",
         success: true,
         data: result,

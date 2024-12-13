@@ -6,9 +6,24 @@ import { StatusCodes } from 'http-status-codes';
 import { IStudent } from './student.interface';
 
 // get all student
-const getStudentsFromDb = async () => {
+const getStudentsFromDb = async (searchTerm?: string) => {
+
+    // let searchTerm = '';
+    // if(query?.searchTerm){
+    //     searchTerm = query?.searchTerm;
+    // }
+    // console.log(search);
+
+    const filter: any = {};
+    if (searchTerm) {
+        const searchRegex = new RegExp(searchTerm, 'i');
+        filter.$or = [
+            {email : searchRegex},
+        ]
+    }
+
     return await StudentModel
-        .find()
+        .find(filter as IStudent)
         .populate('admissionSemester')
         .populate({
             path: 'academicDepartment',
@@ -37,22 +52,22 @@ const updatedStudentIntoDb = async (
 ) => {
 
     const { name, guardian, localGuardian, ...remainingStudent } = payload;
-    const modifiedUpdatedData : Record<string,unknown> = {
+    const modifiedUpdatedData: Record<string, unknown> = {
         ...remainingStudent
     }
 
-    if(name && Object.keys(name).length){
-        for(const [key,value] of Object.entries(name)){
+    if (name && Object.keys(name).length) {
+        for (const [key, value] of Object.entries(name)) {
             modifiedUpdatedData[`name.${key}`] = value;
         }
     };
-    if(guardian && Object.keys(guardian).length){
-        for(const [key,value] of Object.entries(guardian)){
+    if (guardian && Object.keys(guardian).length) {
+        for (const [key, value] of Object.entries(guardian)) {
             modifiedUpdatedData[`guardian.${key}`] = value;
         }
     };
-    if(localGuardian && Object.keys(localGuardian).length){
-        for(const [key,value] of Object.entries(localGuardian)){
+    if (localGuardian && Object.keys(localGuardian).length) {
+        for (const [key, value] of Object.entries(localGuardian)) {
             modifiedUpdatedData[`localGuardian.${key}`] = value;
         }
     };
