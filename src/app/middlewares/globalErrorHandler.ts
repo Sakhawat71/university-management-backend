@@ -9,6 +9,7 @@ import { handelZodError } from "../errors/handelZodError";
 import handelValidationError from "../errors/handelValidationError";
 import handelCastErrro from "../errors/handelCastError";
 import handelDuplicateError from "../errors/handelDuplicateError";
+import AppError from "../errors/appError";
 
 const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next): Promise<any> => {
     //setting default values
@@ -32,16 +33,33 @@ const globalErrorHandler: ErrorRequestHandler = async (err, req, res, next): Pro
         statusCode = simplifiedError?.statusCode;
         message = simplifiedError?.message;
         errorSources = simplifiedError?.errorSources;
-    }else if(err?.name === 'CastError'){
+    } else if (err?.name === 'CastError') {
         const simplifiedError = handelCastErrro(err);
-        statusCode = simplifiedError.statusCode;
-        message = simplifiedError.message;
-        errorSources = simplifiedError.errorSources;
-    }else if(err?.code === 11000){
+        statusCode = simplifiedError?.statusCode;
+        message = simplifiedError?.message;
+        errorSources = simplifiedError?.errorSources;
+    } else if (err?.code === 11000) {
         const simplifiedError = handelDuplicateError(err);
-        statusCode = simplifiedError.statusCode;
-        message = simplifiedError.message;
-        errorSources = simplifiedError.errorSources;
+        statusCode = simplifiedError?.statusCode;
+        message = simplifiedError?.message;
+        errorSources = simplifiedError?.errorSources;
+    } else if (err instanceof AppError) {
+        statusCode = err?.statusCodes;
+        message = err.message;
+        errorSources = [
+            {
+                path: '',
+                message: err?.message,
+            },
+        ];
+    } else if (err instanceof Error) {
+        message = err?.message;
+        errorSources = [
+            {
+                path: '',
+                message: err?.message,
+            },
+        ];
     }
 
     // Ultimate return
