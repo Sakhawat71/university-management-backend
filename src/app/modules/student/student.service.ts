@@ -10,13 +10,15 @@ const getStudentsFromDb = async (query : Record<string,unknown>) => {
 
     let searchTerm = '';
     if(query?.searchTerm){
-        searchTerm = query?.searchTerm;
-        console.log(query?.searchTerm);
+        searchTerm = query?.searchTerm as string;
     }
-    console.log(searchTerm);
 
 
-    return await StudentModel.find()
+    return await StudentModel.find({
+        $or : ['email','name.firstName','presentAddress'].map((field) => ({
+            [field] : {$regex : searchTerm, $options : 'i'}
+        }))
+    })
         .populate('admissionSemester')
         .populate({
             path: 'academicDepartment',
