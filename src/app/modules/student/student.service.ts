@@ -6,24 +6,17 @@ import { StatusCodes } from 'http-status-codes';
 import { IStudent } from './student.interface';
 
 // get all student
-const getStudentsFromDb = async (searchTerm?: string) => {
+const getStudentsFromDb = async (query : Record<string,unknown>) => {
 
-    // let searchTerm = '';
-    // if(query?.searchTerm){
-    //     searchTerm = query?.searchTerm;
-    // }
-    // console.log(search);
-
-    const filter: any = {};
-    if (searchTerm) {
-        const searchRegex = new RegExp(searchTerm, 'i');
-        filter.$or = [
-            {email : searchRegex},
-        ]
+    let searchTerm = '';
+    if(query?.searchTerm){
+        searchTerm = query?.searchTerm;
+        console.log(query?.searchTerm);
     }
+    console.log(searchTerm);
 
-    return await StudentModel
-        .find(filter as IStudent)
+
+    return await StudentModel.find()
         .populate('admissionSemester')
         .populate({
             path: 'academicDepartment',

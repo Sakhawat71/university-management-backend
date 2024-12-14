@@ -21,14 +21,13 @@ import { StatusCodes } from "http-status-codes";
 // };
 
 const getAllStduents = catchAsync(async (req, res) => {
-    const {searchTerm} = req.query;
-    const result = await studentService.getStudentsFromDb(searchTerm as string);
+    const result = await studentService.getStudentsFromDb(req.query);
     res.json({
         success: true,
         message: 'Student are retrieved succesfully',
         data: result,
-    })
-})
+    });
+});
 
 // get specific Individual data by id
 const getSingleStudent: RequestHandler = async (req, res, next) => {
