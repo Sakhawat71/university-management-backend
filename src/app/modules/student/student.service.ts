@@ -7,6 +7,8 @@ import { IStudent } from './student.interface';
 
 // get all student
 const getStudentsFromDb = async (query : Record<string,unknown>) => {
+    
+    console.log('base query',query);
 
     let searchTerm = '';
     if(query?.searchTerm){
