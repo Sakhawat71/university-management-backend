@@ -6,24 +6,25 @@ import { StatusCodes } from 'http-status-codes';
 import { IStudent } from './student.interface';
 
 // get all student
-const getStudentsFromDb = async (query : Record<string,unknown>) => {
-    
-    const queryObj = {...query};
+const getStudentsFromDb = async (query: Record<string, unknown>) => {
+
+    const queryObj = { ...query };
     let searchTerm = '';
-    if(query?.searchTerm){
+    if (query?.searchTerm) {
         searchTerm = query?.searchTerm as string;
     }
 
     const searchQuery = StudentModel.find({
-        $or : ['email','name.firstName','presentAddress'].map((field) => ({
-            [field] : {$regex : searchTerm, $options : 'i'}
+        $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
+            [field]: { $regex: searchTerm, $options: 'i' }
         }))
     })
 
-    const excludeFields = ['searchTerm'];
+    const excludeFields = ['searchTerm', 'sort','limit'];
     excludeFields.forEach((el) => delete queryObj[el]);
 
-    return await searchQuery.find(queryObj)
+
+    const filterQuery = searchQuery.find(queryObj)
         .populate('admissionSemester')
         .populate({
             path: 'academicDepartment',
@@ -31,6 +32,23 @@ const getStudentsFromDb = async (query : Record<string,unknown>) => {
                 path: 'academicFaculty'
             }
         });
+    
+    // sort by descending order 'email'
+    let sort = '-createdAt'
+    if(query.sort){
+        sort = query.sort as string;
+    }
+    const sortQuery = filterQuery.sort(sort);
+
+    // limit
+    let limit = 1
+    if(query.limit){
+        limit = query.limit as number;
+    }
+    const limitQuery = await sortQuery.limit(limit);
+
+
+    return limitQuery;
 }
 
 // get singel student
