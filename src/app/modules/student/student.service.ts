@@ -20,9 +20,9 @@ const getStudentsFromDb = async (query: Record<string, unknown>) => {
         }))
     })
 
-    const excludeFields = ['searchTerm', 'sort','limit'];
+    const excludeFields = ['searchTerm', 'sort', 'limit','page'];
     excludeFields.forEach((el) => delete queryObj[el]);
-
+    console.log({query},{queryObj});
 
     const filterQuery = searchQuery.find(queryObj)
         .populate('admissionSemester')
@@ -32,21 +32,32 @@ const getStudentsFromDb = async (query: Record<string, unknown>) => {
                 path: 'academicFaculty'
             }
         });
-    
+
     // sort by descending order 'email'
     let sort = '-createdAt'
-    if(query.sort){
+    if (query.sort) {
         sort = query.sort as string;
     }
     const sortQuery = filterQuery.sort(sort);
 
-    // limit
-    let limit = 1
-    if(query.limit){
-        limit = query.limit as number;
-    }
-    const limitQuery = await sortQuery.limit(limit);
+    // pageination
+    let page = 1;
+    let skip = 0;
+    let limit = 1;
 
+    if (query.limit) {
+        limit = Number(query.limit);
+    }
+
+    if (query.page) {
+        page = Number(query.page);
+        skip = (page - 1) * limit;
+    }
+    // paginate 
+    const paginateQuery = sortQuery.skip(skip);
+    console.log({ page }, { limit }, { skip });
+    // limit
+    const limitQuery = await paginateQuery.limit(limit);
 
     return limitQuery;
 }
@@ -140,4 +151,4 @@ export const studentService = {
     getSingleStudentById,
     updatedStudentIntoDb,
     deleteStudentById,
-}
+};
