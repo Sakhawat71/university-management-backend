@@ -9,7 +9,17 @@ import { studentSearchableField } from './student.constant';
 
 // get all student
 const getStudentsFromDb = async (query: Record<string, unknown>) => {
-    const studentQuery = new QueryBuilder(StudentModel.find(),query)
+    const studentQuery = new QueryBuilder(
+        StudentModel.find()
+        .populate('admissionSemester')
+        .populate({
+            path: 'academicDepartment',
+            populate: {
+                path: 'academicFaculty'
+            }
+        })
+        ,query
+    )
     .search(studentSearchableField)
     .filter()
     .sort()
@@ -17,7 +27,7 @@ const getStudentsFromDb = async (query: Record<string, unknown>) => {
     .fields();
 
     return await studentQuery.modelQuery;
-}
+};
 
 // get singel student
 const getSingleStudentById = async (id: string) => {
