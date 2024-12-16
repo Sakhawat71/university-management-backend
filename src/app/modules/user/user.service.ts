@@ -1,3 +1,4 @@
+import { IAcademicSemester } from './../academicSemester/academicSemester.interface';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from "mongoose";
 import config from "../../config";
@@ -21,14 +22,16 @@ const createStudentIntoDb = async (password: string, payload: IStudent) => {
     user.password = password || config.default_pass as string;
     user.role = "student";
     const admissionSemesterData = await AcademicSemesterModel.findById(payload.admissionSemester);
-
+    if (!admissionSemesterData) {
+        throw new AppError(StatusCodes.BAD_REQUEST, 'Admission semester not found', '');
+    }
     // implement transaction & rollback
     // create session
     const session = await mongoose.startSession();
 
     try {
         session.startTransaction();
-        user.id = await generateStudentId(admissionSemesterData);
+        user.id = await generateStudentId(admissionSemesterData as IAcademicSemester);
         // user create
         const newUser = await UserModel.create([user], { session });
         if (!newUser.length) {
@@ -63,7 +66,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     //if password is not given , use deafult password
     userData.password = password || (config.default_pass as string);
 
-    //set student role
+    //set user role
     userData.role = 'faculty';
 
     // find academic department info
@@ -135,7 +138,7 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
 
         //create a admin
         if (!newUser.length) {
-            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to create admin','');
+            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to create admin', '');
         }
         // set id , _id as user
         payload.id = newUser[0].id;
@@ -145,7 +148,7 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
         const newAdmin = await AdminModel.create([payload], { session });
 
         if (!newAdmin.length) {
-            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to create admin','');
+            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to create admin', '');
         }
 
         await session.commitTransaction();
