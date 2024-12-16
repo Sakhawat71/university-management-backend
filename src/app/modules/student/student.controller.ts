@@ -5,21 +5,7 @@ import catchAsync from "../../utils/catchAsync";
 import sendResponse from "../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
 
-
-// get all stduents 
-// const getAllStduents: RequestHandler = async (req, res, next) => {
-//     try {
-//         const result = await studentService.getStudentsFromDb();
-//         res.json({
-//             success: true,
-//             message: 'Student are retrieved succesfully',
-//             data: result,
-//         })
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
+// get all students
 const getAllStduents = catchAsync(async (req, res) => {
     const result = await studentService.getStudentsFromDb(req.query);
     res.json({

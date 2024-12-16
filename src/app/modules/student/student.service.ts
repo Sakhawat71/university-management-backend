@@ -4,69 +4,19 @@ import AppError from '../../errors/appError';
 import { UserModel } from '../user/user.model';
 import { StatusCodes } from 'http-status-codes';
 import { IStudent } from './student.interface';
+import QueryBuilder from '../../builder/QueryBuilder';
+import { studentSearchableField } from './student.constant';
 
 // get all student
 const getStudentsFromDb = async (query: Record<string, unknown>) => {
+    const studentQuery = new QueryBuilder(StudentModel.find(),query)
+    .search(studentSearchableField)
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-    const queryObj = { ...query };
-    let searchTerm = '';
-    if (query?.searchTerm) {
-        searchTerm = query?.searchTerm as string;
-    }
-
-    const searchQuery = StudentModel.find({
-        $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
-            [field]: { $regex: searchTerm, $options: 'i' }
-        }))
-    })
-
-    const excludeFields = ['searchTerm', 'sort', 'limit','page','fields'];
-    excludeFields.forEach((el) => delete queryObj[el]);
-    // console.log({query},{queryObj});
-
-    const filterQuery = searchQuery.find(queryObj)
-        .populate('admissionSemester')
-        .populate({
-            path: 'academicDepartment',
-            populate: {
-                path: 'academicFaculty'
-            }
-        });
-
-    // sort by descending order 'email'
-    let sort = '-createdAt'
-    if (query.sort) {
-        sort = query.sort as string;
-    }
-    const sortQuery = filterQuery.sort(sort);
-
-    // pageination
-    let page = 1;
-    let skip = 0;
-    let limit = 2;
-
-    if (query.limit) {
-        limit = Number(query.limit);
-    }
-
-    if (query.page) {
-        page = Number(query.page);
-        skip = (page - 1) * limit;
-    }
-    // paginate 
-    const paginateQuery = sortQuery.skip(skip);
-    // limit
-    const limitQuery = paginateQuery.limit(limit);
-
-    let fields = '-__v';
-    if(query.fields){
-        fields = (query.fields as string).split(',').join(' ');
-    }
-    const fieldQuery = await limitQuery.select(fields); 
-
-    // console.log(fields);
-
-    return fieldQuery;
+    return await studentQuery.modelQuery;
 }
 
 // get singel student
@@ -159,3 +109,68 @@ export const studentService = {
     updatedStudentIntoDb,
     deleteStudentById,
 };
+
+
+// get all student
+// const getStudentsFromDb = async (query: Record<string, unknown>) => {
+
+    // const queryObj = { ...query };
+    // let searchTerm = '';
+    // if (query?.searchTerm) {
+    //     searchTerm = query?.searchTerm as string;
+    // }
+
+    // const searchQuery = StudentModel.find({
+    //     $or: ['email', 'name.firstName', 'presentAddress'].map((field) => ({
+    //         [field]: { $regex: searchTerm, $options: 'i' }
+    //     }))
+    // })
+
+    // const excludeFields = ['searchTerm', 'sort', 'limit','page','fields'];
+    // excludeFields.forEach((el) => delete queryObj[el]);
+    // // console.log({query},{queryObj});
+
+    // const filterQuery = searchQuery.find(queryObj)
+    //     .populate('admissionSemester')
+    //     .populate({
+    //         path: 'academicDepartment',
+    //         populate: {
+    //             path: 'academicFaculty'
+    //         }
+    //     });
+
+    // // sort by descending order 'email'
+    // let sort = '-createdAt'
+    // if (query.sort) {
+    //     sort = query.sort as string;
+    // }
+    // const sortQuery = filterQuery.sort(sort);
+
+    // // pageination
+    // let page = 1;
+    // let skip = 0;
+    // let limit = 2;
+
+    // if (query.limit) {
+    //     limit = Number(query.limit);
+    // }
+
+    // if (query.page) {
+    //     page = Number(query.page);
+    //     skip = (page - 1) * limit;
+    // }
+    // // paginate 
+    // const paginateQuery = sortQuery.skip(skip);
+    // // limit
+    // const limitQuery = paginateQuery.limit(limit);
+
+    // let fields = '-__v';
+    // if(query.fields){
+    //     fields = (query.fields as string).split(',').join(' ');
+    // }
+    // const fieldQuery = await limitQuery.select(fields); 
+
+    // // console.log(fields);
+
+    // return fieldQuery;
+// }
