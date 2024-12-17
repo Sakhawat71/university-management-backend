@@ -1,8 +1,9 @@
+import { TCouser } from "./course.interface";
 import { CourseModel } from "./course.model"
 
 // create course
-const createCourseIntoDB = async () => {
-    return await CourseModel.create();
+const createCourseIntoDB = async (payLoad : TCouser) => {
+    return await CourseModel.create(payLoad);
 };
 
 // get all courses
@@ -21,7 +22,7 @@ const updateCourseIntoDB = async (id: string, payload : object) => {
 };
 
 // soft delete course
-const deleteCourseIntoDB = async (id: string) => {
+const deleteCourseFromDB = async (id: string) => {
     return await CourseModel.findByIdAndUpdate(
         id,
         { isDeleted: true },
@@ -30,10 +31,10 @@ const deleteCourseIntoDB = async (id: string) => {
 };
 
 
-export const courseServices = {
+export const CourseServices = {
     createCourseIntoDB,
     getAllCoursesFromDB,
     getSingleCourseFromDB,
     updateCourseIntoDB,
-    deleteCourseIntoDB
+    deleteCourseFromDB
 }
