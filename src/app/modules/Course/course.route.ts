@@ -34,6 +34,7 @@ route.delete(
 
 route.put(
     '/:courseId/assign-faculties',
+    validateRequest(courseValidation.courseFacultySchemaValidation),
     CourseControllers.assignFacultiesWithCourse
 )
 

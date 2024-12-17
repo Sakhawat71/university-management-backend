@@ -121,6 +121,7 @@ const assignFacultiesWithCourseIntoDB = async (
     return await CourseFacultyModel.findByIdAndUpdate(
         id,
         {
+            course: id,
             $addToSet: { faculties: { $each: payLoad } }
         },
         {
