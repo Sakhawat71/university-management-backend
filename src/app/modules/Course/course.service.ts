@@ -62,7 +62,7 @@ const updateCourseIntoDB = async (id: string, payLoad: TCouser) => {
             }
         );
 
-
+        return await CourseModel.findById(id).populate('preRequisiteCourses.course')
     };
 
 
