@@ -39,6 +39,10 @@ const courseSchema = new Schema<TCouser>({
         required: false,
     },
     preRequisiteCourses: [preRequisiteCourseSchema],
-});
+},
+    {
+        timestamps: true,
+    }
+);
 
 export const CourseModel = model<TCouser>('Course', courseSchema);  
