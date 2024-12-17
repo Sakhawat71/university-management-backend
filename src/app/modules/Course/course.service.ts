@@ -21,12 +21,44 @@ const getAllCoursesFromDB = async (query: Record<string, unknown>) => {
 
 // get one course
 const getSingleCourseFromDB = async (id: string) => {
-    return await CourseModel.findById(id);
+    return await CourseModel.findById(id).populate('preRequisiteCourses.course');
 };
 
 // update one course
-const updateCourseIntoDB = async (id: string, payload: object) => {
-    return await CourseModel.findByIdAndUpdate(id, payload, { new: true });
+const updateCourseIntoDB = async (id: string, payLoad: object) => {
+
+    const { preRequisiteCourses, ...courseRemainingData } = payLoad;
+
+    // step 1 : basic course info update
+    const updateBasicCourseInfo = await CourseModel.findByIdAndUpdate(
+        id,
+        courseRemainingData,
+        {
+            new: true,
+            runValidators: true,
+        }
+    )
+
+    // step 2 : check if there is any pre requisite courses to update
+    if (preRequisiteCourses && preRequisiteCourses.length > 0) {
+
+        const deletePreRequisite = preRequisiteCourses.filter(
+            (el) => el.course && el.isDeleted
+        ).map(el => el.course)
+
+        const deletePreRequisiteCourses = await CourseModel.findByIdAndUpdate(
+            id,
+            {
+                $pull: { preRequisiteCourses: { course: { $in: deletePreRequisite } } }
+            }
+        )
+        console.log(deletePreRequisiteCourses);
+        return deletePreRequisiteCourses;
+    }
+
+
+    return updateBasicCourseInfo;
+    // return await CourseModel.findByIdAndUpdate(id, payLoad, { new: true });
 };
 
 // soft delete course

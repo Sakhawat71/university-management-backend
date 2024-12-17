@@ -3,6 +3,7 @@ import catchAsync from '../../utils/catchAsync';
 import { CourseServices } from './course.service';
 import sendResponse from '../../utils/sendResponse';
 
+// create 
 const createCourse = catchAsync(async (req, res) => {
     const result = await CourseServices.createCourseIntoDB(req.body);
 
@@ -14,6 +15,7 @@ const createCourse = catchAsync(async (req, res) => {
     });
 });
 
+// get all
 const getAllCourses = catchAsync(async (req, res) => {
     const result = await CourseServices.getAllCoursesFromDB(req.query);
 
@@ -25,6 +27,7 @@ const getAllCourses = catchAsync(async (req, res) => {
     });
 });
 
+// get single
 const getSingleCourse = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await CourseServices.getSingleCourseFromDB(id);
@@ -37,6 +40,7 @@ const getSingleCourse = catchAsync(async (req, res) => {
     });
 });
 
+// update
 const updateCourse = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await CourseServices.updateCourseIntoDB(id, req.body);
@@ -49,6 +53,7 @@ const updateCourse = catchAsync(async (req, res) => {
     });
 });
 
+// delete
 const deleteCourse = catchAsync(async (req, res) => {
     const { id } = req.params;
     const result = await CourseServices.deleteCourseFromDB(id);

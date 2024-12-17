@@ -21,7 +21,6 @@ const courseSchema = new Schema<TCouser>({
     },
     prefix: {
         type: String,
-        unique: true,
         trim: true,
         required: true,
     },
