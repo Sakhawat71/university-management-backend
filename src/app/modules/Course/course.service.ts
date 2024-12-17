@@ -25,7 +25,7 @@ const getSingleCourseFromDB = async (id: string) => {
 };
 
 // update one course
-const updateCourseIntoDB = async (id: string, payLoad: object) => {
+const updateCourseIntoDB = async (id: string, payLoad: TCouser) => {
 
     const { preRequisiteCourses, ...courseRemainingData } = payLoad;
 
@@ -37,24 +37,33 @@ const updateCourseIntoDB = async (id: string, payLoad: object) => {
             new: true,
             runValidators: true,
         }
-    )
+    );
 
     // step 2 : check if there is any pre requisite courses to update
     if (preRequisiteCourses && preRequisiteCourses.length > 0) {
 
+        // delete pre req course 
         const deletePreRequisite = preRequisiteCourses.filter(
             (el) => el.course && el.isDeleted
         ).map(el => el.course)
-
         const deletePreRequisiteCourses = await CourseModel.findByIdAndUpdate(
             id,
             {
                 $pull: { preRequisiteCourses: { course: { $in: deletePreRequisite } } }
             }
-        )
-        console.log(deletePreRequisiteCourses);
-        return deletePreRequisiteCourses;
-    }
+        );
+
+        // add pre req courses
+        const newPreRequisites = preRequisiteCourses.filter(el => el.course && !el.isDeleted)
+        const newPreRequisiteCourses = await CourseModel.findByIdAndUpdate(
+            id,
+            {
+                $addToSet : {preRequisiteCourses : {$each : newPreRequisites}}
+            }
+        );
+
+
+    };
 
 
     return updateBasicCourseInfo;
