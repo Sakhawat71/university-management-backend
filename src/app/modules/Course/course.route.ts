@@ -8,17 +8,17 @@ const route = Router();
 route.post(
     '/create-course',
     validateRequest(courseValidation.createCourseSchemaValidation),
-    CourseControllers.createCourse,
+    CourseControllers.createCourse
 );
 
 route.get(
     '/',
-    CourseControllers.getAllCourses,
+    CourseControllers.getAllCourses
 );
 
 route.get(
     '/:id',
-    CourseControllers.getSingleCourse,
+    CourseControllers.getSingleCourse
 );
 
 route.patch(
@@ -29,7 +29,12 @@ route.patch(
 
 route.delete(
     '/:id',
-    CourseControllers.deleteCourse,
+    CourseControllers.deleteCourse
 );
+
+route.put(
+    '/:courseId/assign-faculties',
+    CourseControllers.assignFacultiesWithCourse
+)
 
 export const CourseRoutes = route;

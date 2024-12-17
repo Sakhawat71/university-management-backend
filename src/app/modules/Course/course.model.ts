@@ -1,10 +1,10 @@
 import { model, Schema } from "mongoose";
-import { TCouser, TPreRequisiteCourses } from "./course.interface";
+import { TCourseFaculty, TCouser, TPreRequisiteCourses } from "./course.interface";
 
 const preRequisiteCourseSchema = new Schema<TPreRequisiteCourses>({
     course: {
         type: Schema.Types.ObjectId,
-        ref : 'Course'
+        ref: 'Course'
     },
     isDeleted: {
         type: Boolean,
@@ -45,4 +45,18 @@ const courseSchema = new Schema<TCouser>({
     }
 );
 
-export const CourseModel = model<TCouser>('Course', courseSchema);  
+export const CourseModel = model<TCouser>('Course', courseSchema);
+
+const courseFacultySchema = new Schema<TCourseFaculty>({
+    course: {
+        type: Schema.Types.ObjectId,
+        ref: 'Course',
+        unique: true,
+    },
+    faculties: [{
+        type: Schema.Types.ObjectId,
+        ref : 'Faculty',
+    }]
+});
+
+export const CourseFacultyModel = model<TCourseFaculty>('CourseFaculty',courseFacultySchema);
