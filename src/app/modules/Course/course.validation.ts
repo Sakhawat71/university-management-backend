@@ -8,22 +8,27 @@ const preRequisiteCourseSchemaValidation = z.object({
 
 // Zod schema for creating a course
 export const createCourseSchemaValidation = z.object({
-    title: z.string().min(1, "Title is required").trim(),
-    prefix: z.string().min(1, "Prefix is required").trim(),
-    code: z.number().int().min(1, "Code must be a positive integer"),
-    credits: z.number().min(1, "Credits must be a positive number"),
-    isDeleted: z.boolean().optional(),
-    preRequisiteCourses: z.array(preRequisiteCourseSchemaValidation).optional(),
+    body: z.object({
+        title: z.string().min(1, "Title is required").trim(),
+        prefix: z.string().min(1, "Prefix is required").trim(),
+        code: z.number().int().min(1, "Code must be a positive integer"),
+        credits: z.number().min(1, "Credits must be a positive number"),
+        isDeleted: z.boolean().optional(),
+        preRequisiteCourses: z.array(preRequisiteCourseSchemaValidation).optional(),
+    })
 });
 
 // Zod schema for updating a course
 export const updateCourseSchemaValidation = z.object({
-    title: z.string().min(1, "Title is required").trim().optional(),
-    prefix: z.string().min(1, "Prefix is required").trim().optional(),
-    code: z.number().int().min(1, "Code must be a positive integer").optional(),
-    credits: z.number().min(1, "Credits must be a positive number").optional(),
-    isDeleted: z.boolean().optional(),
-    preRequisiteCourses: z.array(preRequisiteCourseSchemaValidation).optional(),
+    body: z.object({
+        title: z.string().min(1, "Title is required").trim().optional(),
+        prefix: z.string().min(1, "Prefix is required").trim().optional(),
+        code: z.number().int().min(1, "Code must be a positive integer").optional(),
+        credits: z.number().min(1, "Credits must be a positive number").optional(),
+        isDeleted: z.boolean().optional(),
+        preRequisiteCourses: z.array(preRequisiteCourseSchemaValidation).optional(),
+    })
+
 });
 
 export const courseValidation = {
