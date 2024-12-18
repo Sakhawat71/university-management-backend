@@ -4,6 +4,7 @@ import AcademicSemesterModel from "../academicSemester/academicSemester.model";
 import { TSemesterRegistration } from "./semesterRegistration.interface";
 import { SemesterRegistrationModel } from "./semesterRegistration.model";
 import QueryBuilder from "../../builder/QueryBuilder";
+import { RegistrationStatus } from "./semesterRegistration.conostant";
 
 // create 
 const createSemesterRegistrationIntoDB = async (
@@ -13,7 +14,7 @@ const createSemesterRegistrationIntoDB = async (
 
     // check if there any Registered semester that is already 'upcoming' | 'ongoing'
     const isThereAnyUpcomingOrOngoingSemester = await SemesterRegistrationModel.findOne({
-        $or: [{ status: 'UPCOMING' }, { status: 'ONGOING' }]
+        $or: [{ status: RegistrationStatus.UPCOMING }, { status: RegistrationStatus.ONGOING }]
     });
     if (isThereAnyUpcomingOrOngoingSemester) {
         throw new AppError(
@@ -83,20 +84,43 @@ const updateSemesterRegistrationIntoDB = async (id: string, payLoad: Partial<TSe
     };
 
     // check semester already ended or not
-    const requestedSemester = isSemesterRegistrationExist?.status;
-    if (requestedSemester === 'ENDED') {
+    const currentSemesterStatus = isSemesterRegistrationExist?.status;
+    const requestedStatus = payLoad?.status;
+    if (currentSemesterStatus === RegistrationStatus.ENDED) {
         throw new AppError(
             StatusCodes.BAD_REQUEST,
-            `This semester is Alreay ${requestedSemester}`,
+            `This semester is Alreay ${currentSemesterStatus}`,
             ''
         )
     };
+
+    // UPCOMING --> ONGOING --> ENDED
+    if (
+        currentSemesterStatus === RegistrationStatus.UPCOMING &&
+        requestedStatus === RegistrationStatus.ENDED
+    ) {
+        throw new AppError(
+            StatusCodes.BAD_REQUEST,
+            `You can not directly change status from ${currentSemesterStatus} to ${requestedStatus}`, ''
+        );
+    }
+
+    if (
+        currentSemesterStatus === RegistrationStatus.ONGOING &&
+        requestedStatus === RegistrationStatus.UPCOMING
+    ) {
+        throw new AppError(
+            StatusCodes.BAD_REQUEST,
+            `You can not directly change status from ${currentSemesterStatus} to ${requestedStatus}`, ''
+        );
+    }
 
     return await SemesterRegistrationModel.findByIdAndUpdate(
         id,
         payLoad,
         {
-            new: true
+            new: true,
+            runValidators: true
         }
     )
 }
