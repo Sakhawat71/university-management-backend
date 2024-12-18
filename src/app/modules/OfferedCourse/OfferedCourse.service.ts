@@ -6,6 +6,8 @@ import { AcademicFacultyModel } from "../academicFaculty/academicFaculty.model";
 import { AcademicDepartmentModel } from "../academicDepartment/academicDepartment.model";
 import { OfferedCourseModel } from "./OfferedCourse.model";
 import QueryBuilder from "../../builder/QueryBuilder";
+import { CourseModel } from "../Course/course.model";
+import { FacultyModel } from "../Faculty/faculty.model";
 
 
 
@@ -20,35 +22,14 @@ import QueryBuilder from "../../builder/QueryBuilder";
 //    * Step 8: get the schedules of the faculties
 //    * Step 9: check if the faculty is available at that time. If not then throw error
 //    * Step 10: create the offered course
-//    */
 
-//   const academicSemester = isSemesterRegistrationExits.academicSemester;
 
-//   const isAcademicFacultyExits =
-//     await AcademicFacultyModel.findById(academicFaculty);
 
-//   if (!isAcademicFacultyExits) {
-//     throw new AppError(StatusCodes.NOT_FOUND, 'Academic Faculty not found !','');
-//   }
 
-//   const isAcademicDepartmentExits =
-//     await AcademicDepartmentModel.findById(academicDepartment);
 
-//   if (!isAcademicDepartmentExits) {
-//     throw new AppError(StatusCodes.NOT_FOUND, 'Academic Department not found !');
-//   }
 
-//   const isCourseExits = await Course.findById(course);
 
-//   if (!isCourseExits) {
-//     throw new AppError(StatusCodes.NOT_FOUND, 'Course not found !');
-//   }
 
-//   const isFacultyExits = await Faculty.findById(faculty);
-
-//   if (!isFacultyExits) {
-//     throw new AppError(StatusCodes.NOT_FOUND, 'Faculty not found !');
-//   }
 
 //   // check if the department is belong to the  faculty
 //   const isDepartmentBelongToFaculty = await AcademicDepartment.findOne({
@@ -112,8 +93,8 @@ const createOfferedCourseIntoDB = async (payLoad: TOfferedCourse) => {
         academicFaculty,
         academicDepartment,
         course,
-        section,
         faculty,
+        section,
         days,
         startTime,
         endTime,
@@ -130,7 +111,7 @@ const createOfferedCourseIntoDB = async (payLoad: TOfferedCourse) => {
     };
 
     // stap 2 : check academic Faculty exist 
-    const isAcademicFacultyExist = await AcademicDepartmentModel.findById(academicFaculty);
+    const isAcademicFacultyExist = await AcademicFacultyModel.findById(academicFaculty);
     if (!isAcademicFacultyExist) {
         throw new AppError(
             StatusCodes.NOT_FOUND,
@@ -138,11 +119,41 @@ const createOfferedCourseIntoDB = async (payLoad: TOfferedCourse) => {
             ''
         );
     };
-    
+
+    // stap 3 : check academic Department exist  
+    const isAcademicDepartmentExist = await AcademicDepartmentModel.findById(academicDepartment);
+    if (!isAcademicDepartmentExist) {
+        throw new AppError(
+            StatusCodes.NOT_FOUND,
+            'Academic Department not found !',
+            ''
+        );
+    };
+
+    // stap 4 :  course exist
+    const isCourseExits = await CourseModel.findById(course);
+    if (!isCourseExits) {
+        throw new AppError(StatusCodes.NOT_FOUND, 'Course not found !', '');
+    };
+
+    // stap 5: facutly exist
+    const isFacultyExits = await FacultyModel.findById(faculty);
+    if (!isFacultyExits) {
+        throw new AppError(StatusCodes.NOT_FOUND, 'Faculty not found !', '');
+    };
+
+    // stap 6 : Academic Faculty Exits
+    // const isAcademicFacultyExits =
+    //     await AcademicFacultyModel.findById(academicFaculty);
+    // if (!isAcademicFacultyExits) {
+    //     throw new AppError(StatusCodes.NOT_FOUND, 'Academic Faculty not found !', '');
+    // }
+
+    const academicSemester = isSemesterRegistrationExist.academicSemester;
 
 
 
-    return await OfferedCourseModel.create(payLoad);
+    return await OfferedCourseModel.create({...payLoad,academicSemester});
 }
 
 const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
