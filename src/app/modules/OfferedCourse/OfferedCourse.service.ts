@@ -10,15 +10,7 @@ import { CourseModel } from "../Course/course.model";
 import { FacultyModel } from "../Faculty/faculty.model";
 import { hasTimeConflict } from "./OfferedCourse.utils";
 
-
-
-//   const result = await OfferedCourse.create({
-//     ...payload,
-//     academicSemester,
-//   });
-//   return result;
-// };
-
+// create 
 const createOfferedCourseIntoDB = async (payLoad: TOfferedCourse) => {
     const {
         semesterRegistration,
@@ -44,9 +36,6 @@ const createOfferedCourseIntoDB = async (payLoad: TOfferedCourse) => {
         Step 9: check if the faculty is available at that time. If not then throw error
         Step 10: create the offered course
     */
-
-
-
 
     // stap 1 : check semester Registration exist 
     const isSemesterRegistrationExist = await SemesterRegistrationModel.findById(semesterRegistration);
@@ -143,8 +132,9 @@ const createOfferedCourseIntoDB = async (payLoad: TOfferedCourse) => {
     };
 
     return await OfferedCourseModel.create({ ...payLoad, academicSemester });
-}
+};
 
+// get all 
 const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
     const offeredCourseQuery = new QueryBuilder(OfferedCourseModel.find(), query)
         .filter()
@@ -156,6 +146,7 @@ const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
     return result;
 };
 
+// get singel 
 const getSingleOfferedCourseFromDB = async (id: string) => {
     const offeredCourse = await OfferedCourseModel.findById(id);
 
@@ -166,10 +157,10 @@ const getSingleOfferedCourseFromDB = async (id: string) => {
     return offeredCourse;
 };
 
-// const updateOfferedCourseIntoDB = async (
-//   id: string,
-//   payload: Pick<TOfferedCourse, 'faculty' | 'days' | 'startTime' | 'endTime'>,
-// ) => {
+const updateOfferedCourseIntoDB = async (
+  id: string,
+  payload: Pick<TOfferedCourse, 'faculty' | 'days' | 'startTime' | 'endTime'>,
+) => {
 //   /**
 //    * Step 1: check if the offered course exists
 //    * Step 2: check if the faculty exists
@@ -230,7 +221,10 @@ const getSingleOfferedCourseFromDB = async (id: string) => {
 //     new: true,
 //   });
 //   return result;
-// };
+};
+
+
+
 
 // const deleteOfferedCourseFromDB = async (id: string) => {
 //   /**
@@ -266,5 +260,5 @@ export const OfferedCourseServices = {
     getAllOfferedCoursesFromDB,
     getSingleOfferedCourseFromDB,
     //   deleteOfferedCourseFromDB,
-    //   updateOfferedCourseIntoDB,
+      updateOfferedCourseIntoDB,
 };
