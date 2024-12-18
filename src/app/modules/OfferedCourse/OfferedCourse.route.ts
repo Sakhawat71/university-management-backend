@@ -21,4 +21,10 @@ route.get(
     OfferedCourseController.getSingleOfferedCourse
 );
 
+route.patch(
+    '/:id',
+    validateRequest(offeredCourseValidation.updateOfferedCourseValidation),
+    OfferedCourseController.updateOfferedCourse
+);
+
 export const offeredCourseRoute = route;
