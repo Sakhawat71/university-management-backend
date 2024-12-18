@@ -7,20 +7,9 @@ import { AcademicDepartmentModel } from "../academicDepartment/academicDepartmen
 import { OfferedCourseModel } from "./OfferedCourse.model";
 import QueryBuilder from "../../builder/QueryBuilder";
 
-// const createOfferedCourseIntoDB = async (payload: TOfferedCourse) => {
-//   const {
-//     semesterRegistration,
-//     academicFaculty,
-//     academicDepartment,
-//     course,
-//     section,
-//     faculty,
-//     days,
-//     startTime,
-//     endTime,
-//   } = payload;
 
-//   /**
+
+
 //    * Step 1: check if the semester registration id is exists!
 //    * Step 2: check if the academic faculty id is exists!
 //    * Step 3: check if the academic department id is exists!
@@ -32,17 +21,6 @@ import QueryBuilder from "../../builder/QueryBuilder";
 //    * Step 9: check if the faculty is available at that time. If not then throw error
 //    * Step 10: create the offered course
 //    */
-
-//   //check if the semester registration id is exists!
-//   const isSemesterRegistrationExits =
-//     await SemesterRegistrationModel.findById(semesterRegistration);
-
-//   if (!isSemesterRegistrationExits) {
-//     throw new AppError(
-//       StatusCodes.NOT_FOUND,
-//       'Semester registration not found !',''
-//     );
-//   }
 
 //   const academicSemester = isSemesterRegistrationExits.academicSemester;
 
@@ -128,25 +106,64 @@ import QueryBuilder from "../../builder/QueryBuilder";
 //   return result;
 // };
 
-const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
-  const offeredCourseQuery = new QueryBuilder(OfferedCourseModel.find(), query)
-    .filter()
-    .sort()
-    .paginate()
-    .fields();
+const createOfferedCourseIntoDB = async (payLoad: TOfferedCourse) => {
+    const {
+        semesterRegistration,
+        academicFaculty,
+        academicDepartment,
+        course,
+        section,
+        faculty,
+        days,
+        startTime,
+        endTime,
+    } = payLoad;
 
-  const result = await offeredCourseQuery.modelQuery;
-  return result;
+    // stap 1 : check semester Registration exist 
+    const isSemesterRegistrationExist = await SemesterRegistrationModel.findById(semesterRegistration);
+    if (!isSemesterRegistrationExist) {
+        throw new AppError(
+            StatusCodes.NOT_FOUND,
+            'Semester registration not found !',
+            ''
+        );
+    };
+
+    // stap 2 : check academic Faculty exist 
+    const isAcademicFacultyExist = await AcademicDepartmentModel.findById(academicFaculty);
+    if (!isAcademicFacultyExist) {
+        throw new AppError(
+            StatusCodes.NOT_FOUND,
+            'academic Faculty not found !',
+            ''
+        );
+    };
+    
+
+
+
+    return await OfferedCourseModel.create(payLoad);
+}
+
+const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
+    const offeredCourseQuery = new QueryBuilder(OfferedCourseModel.find(), query)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
+
+    const result = await offeredCourseQuery.modelQuery;
+    return result;
 };
 
 const getSingleOfferedCourseFromDB = async (id: string) => {
-  const offeredCourse = await OfferedCourseModel.findById(id);
+    const offeredCourse = await OfferedCourseModel.findById(id);
 
-  if (!offeredCourse) {
-    throw new AppError(404, 'Offered Course not found','');
-  }
+    if (!offeredCourse) {
+        throw new AppError(404, 'Offered Course not found', '');
+    }
 
-  return offeredCourse;
+    return offeredCourse;
 };
 
 // const updateOfferedCourseIntoDB = async (
@@ -245,9 +262,9 @@ const getSingleOfferedCourseFromDB = async (id: string) => {
 // };
 
 export const OfferedCourseServices = {
-//   createOfferedCourseIntoDB,
-  getAllOfferedCoursesFromDB,
-  getSingleOfferedCourseFromDB,
-//   deleteOfferedCourseFromDB,
-//   updateOfferedCourseIntoDB,
+    createOfferedCourseIntoDB,
+    getAllOfferedCoursesFromDB,
+    getSingleOfferedCourseFromDB,
+    //   deleteOfferedCourseFromDB,
+    //   updateOfferedCourseIntoDB,
 };

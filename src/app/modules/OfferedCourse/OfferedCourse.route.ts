@@ -19,6 +19,6 @@ route.get(
 route.get(
     '/:id',
     OfferedCourseController.getSingleOfferedCourse
-)
+);
 
 export const offeredCourseRoute = route;
