@@ -16,4 +16,14 @@ route.get(
     semesterRegistrationController.getAllSemesterRegistration
 );
 
+route.get(
+    "/:id",
+    semesterRegistrationController.getSingelSemesterRegistration
+);
+
+route.patch(
+    '/:id',
+    validateRequest(SemesterRegistrationValidation.updateSemesterRegistrationSchemaValidation),
+    semesterRegistrationController.updateSemesterRegistration
+)
 export const SemesterRegistrationRoute = route;

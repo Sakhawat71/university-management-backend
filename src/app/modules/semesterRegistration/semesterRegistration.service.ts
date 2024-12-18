@@ -52,9 +52,9 @@ const getAllSemesterRegistrationFromDB = async (
 };
 
 
-// get singel
+// get singel 
 const getSingleSemesterRegistrationFromDB = async (id: string) => {
-    return await SemesterRegistrationModel.findById(id);
+    return await SemesterRegistrationModel.findById(id).populate('academicSemester');
 };
 
 // update
