@@ -5,7 +5,7 @@ import { OfferedCourseServices } from "./OfferedCourse.service";
 
 // create 
 const createOfferedCourse = catchAsync(async (req, res) => {
-    const result = OfferedCourseServices.createOfferedCourseIntoDB(req.body);
+    const result = await OfferedCourseServices.createOfferedCourseIntoDB(req.body);
     sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,
@@ -16,7 +16,7 @@ const createOfferedCourse = catchAsync(async (req, res) => {
 
 // get all
 const getAllOfferedCourse = catchAsync(async (req, res) => {
-    const result = OfferedCourseServices.getAllOfferedCoursesFromDB(req.query);
+    const result = await OfferedCourseServices.getAllOfferedCoursesFromDB(req.query);
     sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,
@@ -28,7 +28,7 @@ const getAllOfferedCourse = catchAsync(async (req, res) => {
 // get single 
 const getSingleOfferedCourse = catchAsync(async (req, res) => {
     const {id} = req.params
-    const result = OfferedCourseServices.getSingleOfferedCourseFromDB(id);
+    const result = await OfferedCourseServices.getSingleOfferedCourseFromDB(id);
     sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,
@@ -38,13 +38,13 @@ const getSingleOfferedCourse = catchAsync(async (req, res) => {
 })
 
 // update
-const updateOfferedCourse = catchAsync(async (req, res) => {
+// const updateOfferedCourse = catchAsync(async (req, res) => {
 
-})
+// })
 
 export const OfferedCourseController = {
     createOfferedCourse,
     getAllOfferedCourse,
     getSingleOfferedCourse,
-    updateOfferedCourse,
+    // updateOfferedCourse,
 }
