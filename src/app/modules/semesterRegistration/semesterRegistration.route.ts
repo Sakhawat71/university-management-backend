@@ -9,6 +9,11 @@ route.post(
     '/create-semester-registration',
     validateRequest(SemesterRegistrationValidation.createSemesterRegistrationSchemaValidation),
     semesterRegistrationController.createSemesterRegistration
-)
+);
+
+route.get(
+    '/',
+    semesterRegistrationController.getAllSemesterRegistration
+);
 
 export const SemesterRegistrationRoute = route;

@@ -3,6 +3,7 @@ import AppError from "../../errors/appError";
 import AcademicSemesterModel from "../academicSemester/academicSemester.model";
 import { TSemesterRegistration } from "./semesterRegistration.interface";
 import { SemesterRegistrationModel } from "./semesterRegistration.model";
+import QueryBuilder from "../../builder/QueryBuilder";
 
 // create 
 const createSemesterRegistrationIntoDB = async (
@@ -29,15 +30,27 @@ const createSemesterRegistrationIntoDB = async (
             ''
         )
     };
-    
+
     // final result 
     return await SemesterRegistrationModel.create(payLoad);
 };
 
+
 // get all 
-const getAllSemesterRegistrationFromDB = async () => {
-    return await SemesterRegistrationModel.find();
+const getAllSemesterRegistrationFromDB = async (
+    query: Record<string, unknown>
+) => {
+    const semesterRegistrationQuery = new QueryBuilder(
+        SemesterRegistrationModel.find().populate('academicSemester'),
+        query
+    )
+        .filter()
+        .sort()
+        .paginate()
+        .fields()
+    return await semesterRegistrationQuery.modelQuery;
 };
+
 
 // get singel
 const getSingleSemesterRegistrationFromDB = async (id: string) => {
