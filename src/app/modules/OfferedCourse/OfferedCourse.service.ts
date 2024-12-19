@@ -157,6 +157,7 @@ const getSingleOfferedCourseFromDB = async (id: string) => {
     return offeredCourse;
 };
 
+// update
 const updateOfferedCourseIntoDB = async (
     id: string,
     payload: Pick<TOfferedCourse, 'faculty' | 'days' | 'startTime' | 'endTime'>,
@@ -217,45 +218,42 @@ const updateOfferedCourseIntoDB = async (
     return await OfferedCourseModel.findByIdAndUpdate(id, payload, {
         new: true,
     });
-
 };
 
 
+const deleteOfferedCourseFromDB = async (id: string) => {
+    /**
+     * Step 1: check if the offered course exists
+     * Step 2: check if the semester registration status is upcoming
+     * Step 3: delete the offered course
+     */
+    //   const isOfferedCourseExists = await OfferedCourse.findById(id);
 
+    //   if (!isOfferedCourseExists) {
+    //     throw new AppError(StatusCodes.NOT_FOUND, 'Offered Course not found');
+    //   }
 
-// const deleteOfferedCourseFromDB = async (id: string) => {
-//   /**
-//    * Step 1: check if the offered course exists
-//    * Step 2: check if the semester registration status is upcoming
-//    * Step 3: delete the offered course
-//    */
-//   const isOfferedCourseExists = await OfferedCourse.findById(id);
+    //   const semesterRegistation = isOfferedCourseExists.semesterRegistration;
 
-//   if (!isOfferedCourseExists) {
-//     throw new AppError(StatusCodes.NOT_FOUND, 'Offered Course not found');
-//   }
+    //   const semesterRegistrationStatus =
+    //     await SemesterRegistration.findById(semesterRegistation).select('status');
 
-//   const semesterRegistation = isOfferedCourseExists.semesterRegistration;
+    //   if (semesterRegistrationStatus?.status !== 'UPCOMING') {
+    //     throw new AppError(
+    //       StatusCodes.BAD_REQUEST,
+    //       `Offered course can not update ! because the semester ${semesterRegistrationStatus}`,
+    //     );
+    //   }
 
-//   const semesterRegistrationStatus =
-//     await SemesterRegistration.findById(semesterRegistation).select('status');
+    //   const result = await OfferedCourse.findByIdAndDelete(id);
 
-//   if (semesterRegistrationStatus?.status !== 'UPCOMING') {
-//     throw new AppError(
-//       StatusCodes.BAD_REQUEST,
-//       `Offered course can not update ! because the semester ${semesterRegistrationStatus}`,
-//     );
-//   }
-
-//   const result = await OfferedCourse.findByIdAndDelete(id);
-
-//   return result;
-// };
+    //   return result;
+};
 
 export const OfferedCourseServices = {
     createOfferedCourseIntoDB,
     getAllOfferedCoursesFromDB,
     getSingleOfferedCourseFromDB,
-    //   deleteOfferedCourseFromDB,
+    deleteOfferedCourseFromDB,
     updateOfferedCourseIntoDB,
 };
