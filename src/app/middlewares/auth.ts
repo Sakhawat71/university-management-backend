@@ -51,6 +51,11 @@ const authValidation = (...requiredRoles: TUserRole[]) => {
             );
         };
 
+
+        if(user.passwordChangedAt && UserModel.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt,decoded.iat as number)){
+            throw new AppError(StatusCodes.UNAUTHORIZED,'You Are not Authorize','')
+        }
+
         if (requiredRoles && !requiredRoles.includes(decoded?.role)) {
             throw new AppError(
                 StatusCodes.UNAUTHORIZED,
