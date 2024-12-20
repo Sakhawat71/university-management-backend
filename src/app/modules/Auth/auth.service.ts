@@ -5,6 +5,7 @@ import { TChangePassword, TLoginUser } from "./auth.interface";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from "../../config";
 import bcrypt from 'bcrypt';
+import { createToken } from "./auth.utils";
 
 // login user
 const loginUser = async (payLoad: TLoginUser) => {
@@ -51,21 +52,22 @@ const loginUser = async (payLoad: TLoginUser) => {
     };
 
     // Create jwt access token
-    const accessToken = jwt.sign(
+    const accessToken = createToken(
         JwtPayload,
         config.jwt_access_secret as string,
-        { expiresIn: '10d' }
-    );
+        config.jwt_access_expires_in as string,
+    )
 
     // Create jwt refreshToken
-    const refreshToken = jwt.sign(
+    const refreshToken = createToken(
         JwtPayload,
         config.jwt_refresh_secret as string,
-        { expiresIn: '90d' }
-    );
+        config.jwt_refresh_expires_in as string
+    )
 
     return {
         accessToken,
+        refreshToken,
         needPasswrodChange: user.needsPasswordChange,
     };
 };
