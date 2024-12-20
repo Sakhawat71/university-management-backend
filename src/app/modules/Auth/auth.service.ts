@@ -45,7 +45,6 @@ const loginUser = async (payLoad: TLoginUser) => {
         );
     };
 
-
     const JwtPayload = {
         userId: user.id,
         role: user.role,

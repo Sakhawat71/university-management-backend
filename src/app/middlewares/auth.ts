@@ -7,7 +7,7 @@ import config from "../config";
 import { TUserRole } from "../modules/user/user.interface";
 
 
-const authValidation = (...requiredRoles : TUserRole[]) => {
+const authValidation = (...requiredRoles: TUserRole[]) => {
     return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
         const token = req.headers.authorization;
 
@@ -21,33 +21,24 @@ const authValidation = (...requiredRoles : TUserRole[]) => {
         };
 
         // check if the token is valid
-        jwt.verify(
-            token,
-            config.jwt_access_secret as string,
-            function (err, decoded) {
-                if (err) {
-                    throw new AppError(
-                        StatusCodes.UNAUTHORIZED,
-                        "Unauthorized",
-                        ''
-                    )
-                };
+        const decoded = jwt.verify(token, config.jwt_access_secret as string) as JwtPayload;
 
-                // Verify admin or not
-                if(requiredRoles && !requiredRoles.includes((decoded as JwtPayload)?.role)){
-                    throw new AppError(
-                        StatusCodes.UNAUTHORIZED,
-                        "You are not authorized",
-                        ''
-                    )
-                };
 
-                req.user = decoded as JwtPayload;
-                next()
-            }
-        );
 
-        // next();
+
+
+
+        
+        if (requiredRoles && !requiredRoles.includes(decoded?.role)) {
+            throw new AppError(
+                StatusCodes.UNAUTHORIZED,
+                "You are not authorized",
+                ''
+            )
+        };
+
+        req.user = decoded as JwtPayload;
+        next()
     })
 };
 export default authValidation;
