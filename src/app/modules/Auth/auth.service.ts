@@ -130,9 +130,81 @@ const changePassword = async (userData: JwtPayload, payLoad: TChangePassword) =>
     )
 
     return null;
-}
+};
+
+// refresh Token
+const refreshToken = async (token: string) => {
+
+    // check if the token is valid
+    const decoded = jwt.verify(
+        token,
+        config.jwt_refresh_secret as string
+    ) as JwtPayload;
+
+
+    const user = await UserModel.isUserExistsByCustomId(decoded.userId);
+    if (!user) {
+        throw new AppError(
+            StatusCodes.NOT_FOUND,
+            "User not found",
+            ''
+        );
+    };
+
+    // Check if user is deleted
+    if (user.isDeleted) {
+        throw new AppError(
+            StatusCodes.BAD_REQUEST,
+            "User is deleted",
+            ''
+        );
+    };
+
+    // Check if user is blocked
+    if (user.status === 'blocked') {
+        throw new AppError(
+            StatusCodes.BAD_REQUEST,
+            "User is bloack",
+            ''
+        );
+    };
+
+    if (
+        user.passwordChangedAt &&
+        UserModel.isJWTIssuedBeforePasswordChanged(
+            user.passwordChangedAt,
+            decoded.iat as number
+        )
+    ) {
+        throw new AppError(
+            StatusCodes.UNAUTHORIZED,
+            'You Are not Authorize',
+            ''
+        )
+    };
+
+
+    const JwtPayload = {
+        userId: user.id,
+        role: user.role,
+    };
+
+    // Create jwt access token
+    const accessToken = createToken(
+        JwtPayload,
+        config.jwt_access_secret as string,
+        config.jwt_access_expires_in as string,
+    )
+
+    return{
+        accessToken
+    };
+};
+
+
 
 export const AuthService = {
     loginUser,
     changePassword,
+    refreshToken,
 };
