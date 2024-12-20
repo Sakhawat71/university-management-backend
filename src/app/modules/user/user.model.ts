@@ -1,13 +1,13 @@
 import { model, Schema } from "mongoose";
-import { IUser } from "./user.interface";
+import { IUser, IUserModel } from "./user.interface";
 import bcrypt from 'bcrypt';
 import config from "../../config";
 
-const userSchema = new Schema<IUser>({
+const userSchema = new Schema<IUser, IUserModel>({
     id: {
         type: String,
         required: true,
-        unique : true,
+        unique: true,
     },
     password: {
         type: String,
@@ -46,9 +46,30 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
+// user password remove from response
 userSchema.post("save", function (doc, next) {
     doc.password = "";
     next();
-})
+});
 
-export const UserModel = model<IUser>('User', userSchema); 
+// user exists by custom id
+userSchema.statics.isUserExistsByCustomId = async function (id: string) {
+    return await UserModel.findOne({ id });
+};
+
+// is user deleted
+// userSchema.statics.isUserDeleted = async function (id: string) { 
+//     return await UserModel.findOne({ id, isDeleted: true });
+// };
+
+// is user blocked
+// userSchema.statics.isUserBlocked = async function (id: string) {
+//     return await UserModel.findOne({ id, status: 'blocked' });
+// };
+
+// password match
+userSchema.statics.isPasswordMatch = async function (password: string, hash: string) {
+    return await bcrypt.compare(password, hash);
+}
+
+export const UserModel = model<IUser, IUserModel>('User', userSchema); 

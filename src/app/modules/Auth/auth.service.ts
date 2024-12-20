@@ -2,13 +2,16 @@ import { StatusCodes } from "http-status-codes";
 import AppError from "../../errors/appError";
 import { UserModel } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
-import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken';
 
 
 const loginUser = async (payLoad: TLoginUser) => {
+
+
     // Check if user exists
-    const isUserExist = await UserModel.findOne({ id: payLoad.id });
-    if (!isUserExist) {
+    const user = await UserModel.isUserExistsByCustomId(payLoad?.id);
+
+    if (!user) {
         throw new AppError(
             StatusCodes.NOT_FOUND,
             "User not found",
@@ -16,11 +19,8 @@ const loginUser = async (payLoad: TLoginUser) => {
         );
     };
 
-    // console.log(isUserExist);
-
     // Check if user is deleted
-    const isUserDeleted = isUserExist?.isDeleted;
-    if (isUserDeleted) {
+    if (user.isDeleted) {
         throw new AppError(
             StatusCodes.BAD_REQUEST,
             "User is deleted",
@@ -28,9 +28,9 @@ const loginUser = async (payLoad: TLoginUser) => {
         );
     };
 
+
     // Check if user is blocked
-    const userStatus = isUserExist?.status;
-    if(userStatus === 'blocked') {
+    if (user.status === 'blocked') {
         throw new AppError(
             StatusCodes.BAD_REQUEST,
             "User is bloack",
@@ -39,14 +39,29 @@ const loginUser = async (payLoad: TLoginUser) => {
     };
 
     // Check if password match
-    const isPsswordMatch = await bcrypt.compare(payLoad?.password, isUserExist?.password);
-    console.log(isPsswordMatch);
+    if (! await UserModel.isPasswordMatch(payLoad?.password, user?.password)) {
+        throw new AppError(
+            StatusCodes.FORBIDDEN,
+            "Password does not match",
+            ''
+        );
+    };
+    // console.log(await UserModel.isPasswordMatch(payLoad?.password, user.password));
+
+    const JwtPayload = {
+        userId: user.id,
+        role: user.role,
+    }
+
+    const accessToken = jwt.sign(
+        JwtPayload,
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN }
+    );
 
 
 
-
-
-
+    return {}
 
 
 };
