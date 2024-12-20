@@ -29,7 +29,6 @@ const loginUser = async (payLoad: TLoginUser) => {
         );
     };
 
-
     // Check if user is blocked
     if (user.status === 'blocked') {
         throw new AppError(
@@ -47,13 +46,14 @@ const loginUser = async (payLoad: TLoginUser) => {
             ''
         );
     };
-    // console.log(await UserModel.isPasswordMatch(payLoad?.password, user.password));
+    
 
     const JwtPayload = {
         userId: user.id,
         role: user.role,
-    }
+    };
 
+    // Create jwt access token
     const accessToken = jwt.sign(
         JwtPayload,
         config.jwt_access_secret as string,

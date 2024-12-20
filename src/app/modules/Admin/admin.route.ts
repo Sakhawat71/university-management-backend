@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.get(
     '/',
-    authValidation(),
+    // authValidation(),
     AdminControllers.getAllAdmins);
 
 router.get('/:id', AdminControllers.getSingleAdmin);
