@@ -11,7 +11,8 @@ const userSchema = new Schema<IUser, IUserModel>({
     },
     password: {
         type: String,
-        required: true
+        required: true,
+        select : 0,
     },
     needsPasswordChange: {
         type: Boolean,
@@ -54,18 +55,8 @@ userSchema.post("save", function (doc, next) {
 
 // user exists by custom id
 userSchema.statics.isUserExistsByCustomId = async function (id: string) {
-    return await UserModel.findOne({ id });
+    return await UserModel.findOne({ id }).select('+password');
 };
-
-// is user deleted
-// userSchema.statics.isUserDeleted = async function (id: string) { 
-//     return await UserModel.findOne({ id, isDeleted: true });
-// };
-
-// is user blocked
-// userSchema.statics.isUserBlocked = async function (id: string) {
-//     return await UserModel.findOne({ id, status: 'blocked' });
-// };
 
 // password match
 userSchema.statics.isPasswordMatch = async function (password: string, hash: string) {
