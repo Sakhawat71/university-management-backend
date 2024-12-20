@@ -57,6 +57,13 @@ const loginUser = async (payLoad: TLoginUser) => {
         { expiresIn: '10d' }
     );
 
+    // Create jwt refreshToken
+    const refreshToken = jwt.sign(
+        JwtPayload,
+        config.jwt_refresh_secret as string,
+        { expiresIn: '90d' }
+    );
+
     return {
         accessToken,
         needPasswrodChange: user.needsPasswordChange,
