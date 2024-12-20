@@ -3,6 +3,7 @@ import AppError from "../../errors/appError";
 import { UserModel } from "../user/user.model";
 import { TLoginUser } from "./auth.interface";
 import jwt from 'jsonwebtoken';
+import config from "../../config";
 
 
 const loginUser = async (payLoad: TLoginUser) => {
@@ -55,15 +56,14 @@ const loginUser = async (payLoad: TLoginUser) => {
 
     const accessToken = jwt.sign(
         JwtPayload,
-        process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRES_IN }
+        config.jwt_access_secret as string,
+        { expiresIn: '10d' }
     );
 
-
-
-    return {}
-
-
+    return {
+        accessToken,
+        needPasswrodChange: user.needsPasswordChange,   
+    }
 };
 
 export const AuthService = {
