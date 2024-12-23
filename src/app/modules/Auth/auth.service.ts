@@ -1,7 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import AppError from "../../errors/appError";
 import { UserModel } from "../user/user.model";
-import { TChangePassword, TLoginUser } from "./auth.interface";
+import { TChangePassword, TLoginUser, TResetPassword } from "./auth.interface";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from "../../config";
 import bcrypt from 'bcrypt';
@@ -220,11 +220,40 @@ const forgetPassword = async (userId: string) => {
         '10m'
     );
 
-    
+
     const resetUiLink = `${config.reset_pass_ui_link}?id=${user.id}&token=${resetToken}`;
-    sendEmail(user.email,resetUiLink);
+    sendEmail(user.email, resetUiLink);
 
     return resetUiLink;
+};
+
+// reset password
+const resetPassword = async (
+    payLoad: TResetPassword,
+    token: string
+) => {
+    // check payload id's user exist
+    const user = await checkIsUserValidByCustomID(payLoad?.id);
+
+    // check given token valide
+    const decoded = jwt.verify(
+        token,
+        config.jwt_access_secret as string
+    ) as JwtPayload;
+
+    // throw error if token and payload user are not same
+    if(!(decoded.userId === user.id)){
+        throw new AppError(
+            StatusCodes.FORBIDDEN,
+            'Your Are Forbidden!'
+        )
+    };
+
+
+
+
+    // console.log(payLoad.newPassword);
+    
 };
 
 export const AuthService = {
@@ -232,4 +261,5 @@ export const AuthService = {
     changePassword,
     refreshToken,
     forgetPassword,
+    resetPassword
 };
