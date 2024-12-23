@@ -52,12 +52,8 @@ const refreshToken = catchAsync(async (req, res) => {
 
 // forget Password
 const forgetPassword = catchAsync(async (req, res) => {
-    const { id: userId } = req.params;
-
-    console.log(req.body);
-    console.log(userId);
-
-    const result = await AuthService.forgetPassword(userId);
+    const {id} = req.body;
+    const result = await AuthService.forgetPassword(id);
     sendResponse(res, {
         success: true,
         statusCode: StatusCodes.OK,

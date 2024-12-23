@@ -6,6 +6,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from "../../config";
 import bcrypt from 'bcrypt';
 import { checkIsUserValidByCustomID, createToken } from "./auth.utils";
+import { sendEmail } from "../../utils/sendEmail";
 
 // login user
 const loginUser = async (payLoad: TLoginUser) => {
@@ -204,12 +205,12 @@ const refreshToken = async (token: string) => {
 // forget passwrod
 const forgetPassword = async (userId: string) => {
 
-    const { success, user } = await checkIsUserValidByCustomID(userId);
-    console.log(success);
+    const user = await checkIsUserValidByCustomID(userId);
+    // console.log(success);
 
     const JwtPayload = {
-        userId : user.id,
-        role : user.role,
+        userId: user.id,
+        role: user.role,
     };
 
     // Create jwt access token
@@ -219,8 +220,10 @@ const forgetPassword = async (userId: string) => {
         '10m'
     );
 
-    const resetUiLink = `http://localhost:5000?id=${user.id}&token=${resetToken}`;
-    console.log(resetUiLink);
+    
+    const resetUiLink = `${config.reset_pass_ui_link}?id=${user.id}&token=${resetToken}`;
+    sendEmail(user.email,resetUiLink);
+
     return resetUiLink;
 };
 

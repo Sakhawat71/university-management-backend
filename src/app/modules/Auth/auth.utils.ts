@@ -15,6 +15,7 @@ export const createToken = (
 
 
 export const checkIsUserValidByCustomID = async (id: string) => {
+    // const user = await UserModel.findOne({id});
     const user = await UserModel.isUserExistsByCustomId(id);
     if (!user) {
         throw new AppError(
@@ -39,8 +40,5 @@ export const checkIsUserValidByCustomID = async (id: string) => {
         );
     };
 
-    return {
-        success: true,
-        user,
-    }
+    return user;
 };

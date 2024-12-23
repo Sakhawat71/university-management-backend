@@ -1,22 +1,24 @@
 import nodemailer from 'nodemailer';
+import config from '../config';
 
-export const sendEmail = async () => {
+export const sendEmail = async (email : string, link : string) => {
     const transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
+        host: "smtp.gmail.com",
         port: 587,
-        secure: false, // true for port 465, false for other ports
+        secure: config.NODE_ENV === 'production',
         auth: {
-            user: "maddison53@ethereal.email",
-            pass: "jn7jnAPss4f63QBp6D",
+            user: "sakhawat.showrav@gmail.com",
+            pass: "etan fofg ilph qtsi",
         },
     });
 
     await transporter.sendMail({
-        from: '"Maddison Foo Koch 👻" <maddison53@ethereal.email>', // sender address
-        to: "bar@example.com, baz@example.com", // list of receivers
-        subject: "Hello ✔", // Subject line
-        text: "Hello world?", // plain text body
-        html: "<b>Hello world?</b>", // html body
+        from: '"PH University" <sakhawat.showrav@gmail.com>', // sender address
+        to: email, // list of receivers
+        subject: "Password Reset Request", // Subject line
+        text: `You have requested to reset your password. Please use the link below : link`, // plain text body
+        html: `<p>You have requested to reset your password. Please use the link below: </p>
+        <a href=${link} target="_blank">Reset Password</a>`, // html body
     });
-
+    
 };

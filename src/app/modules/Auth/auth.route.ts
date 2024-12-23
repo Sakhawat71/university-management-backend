@@ -28,7 +28,7 @@ router.post(
 );
 
 router.post(
-    '/forget-password/:id',
+    '/forget-password',
     AuthController.forgetPassword
 )
 
