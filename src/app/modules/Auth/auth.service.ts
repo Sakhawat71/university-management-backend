@@ -242,18 +242,31 @@ const resetPassword = async (
     ) as JwtPayload;
 
     // throw error if token and payload user are not same
-    if(!(decoded.userId === user.id)){
+    if (decoded.userId !== user.id) {
         throw new AppError(
             StatusCodes.FORBIDDEN,
             'Your Are Forbidden!'
         )
     };
 
+    //hash newPassord
+    const newHashedPassword = await bcrypt.hash(
+        payLoad.newPassword,
+        Number(config.bcrypt_salt_round),
+    );
 
-
-
-    // console.log(payLoad.newPassword);
-    
+    // change password
+    await UserModel.findOneAndUpdate(
+        {
+            id: decoded.userId,
+            role: decoded.role
+        },
+        {
+            password : newHashedPassword,
+            needsPasswordChange : false,
+            passwordChangedAt : new Date()
+        }
+    );
 };
 
 export const AuthService = {
