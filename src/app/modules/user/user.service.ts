@@ -18,33 +18,56 @@ import { AdminModel } from "../Admin/admin.model";
 // students
 const createStudentIntoDb = async (password: string, payload: IStudent) => {
 
+    // create a user object
     const user: Partial<IUser> = {};
+
+    // if password is Not given, use default password.
     user.password = password || config.default_pass as string;
+
+    // set user role and email
     user.role = "student";
+    user.email = payload.email;
+
+    // find academic semester info
     const admissionSemesterData = await AcademicSemesterModel.findById(payload.admissionSemester);
     if (!admissionSemesterData) {
-        throw new AppError(StatusCodes.BAD_REQUEST, 'Admission semester not found', '');
-    }
+        throw new AppError(
+            StatusCodes.BAD_REQUEST,
+            'Admission semester not found'
+        );
+    };
+
+
     // implement transaction & rollback
     // create session
     const session = await mongoose.startSession();
 
     try {
         session.startTransaction();
+
+        // set Generated id
         user.id = await generateStudentId(admissionSemesterData as IAcademicSemester);
-        // user create
+
+        // Create a user
         const newUser = await UserModel.create([user], { session });
         if (!newUser.length) {
-            throw new AppError(StatusCodes.BAD_REQUEST, 'Fail to create user', '')
-        }
+            throw new AppError(
+                StatusCodes.BAD_REQUEST,
+                'Fail to create user'
+            )
+        };
+
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id;
 
         // 
         const newStudent = await StudentModel.create([payload], { session });
         if (!newStudent.length) {
-            throw new AppError(StatusCodes.BAD_REQUEST, 'Fail to create student', '')
-        }
+            throw new AppError(
+                StatusCodes.BAD_REQUEST,
+                'Fail to create student'
+            )
+        };
 
         await session.commitTransaction();
         await session.endSession();
@@ -68,6 +91,7 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
 
     //set user role
     userData.role = 'faculty';
+    userData.email = payload.email;
 
     // find academic department info
     const academicDepartment = await AcademicDepartmentModel.findById(
@@ -75,8 +99,11 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
     );
 
     if (!academicDepartment) {
-        throw new AppError(400, 'Academic department not found', '');
-    }
+        throw new AppError(
+            StatusCodes.NOT_FOUND,
+            'Academic department not found'
+        );
+    };
 
     const session = await mongoose.startSession();
 
@@ -90,8 +117,12 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
 
         //create a faculty
         if (!newUser.length) {
-            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to create user', '');
-        }
+            throw new AppError(
+                StatusCodes.BAD_REQUEST,
+                'Failed to create user'
+            );
+        };
+
         // set id , _id as user
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id; //reference _id
@@ -101,8 +132,11 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
         const newFaculty = await FacultyModel.create([payload], { session });
 
         if (!newFaculty.length) {
-            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to create faculty', '');
-        }
+            throw new AppError(
+                StatusCodes.BAD_REQUEST,
+                'Failed to create faculty'
+            );
+        };
 
         await session.commitTransaction();
         await session.endSession();
@@ -123,8 +157,9 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
     //if password is not given , use deafult password
     userData.password = password || (config.default_pass as string);
 
-    //set student role
+    //set student role and email
     userData.role = 'admin';
+    userData.email = payload.email;
 
     const session = await mongoose.startSession();
 
@@ -138,8 +173,12 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
 
         //create a admin
         if (!newUser.length) {
-            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to create admin', '');
-        }
+            throw new AppError(
+                StatusCodes.BAD_REQUEST,
+                'Failed to create admin'
+            );
+        };
+
         // set id , _id as user
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id; //reference _id
@@ -148,8 +187,11 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
         const newAdmin = await AdminModel.create([payload], { session });
 
         if (!newAdmin.length) {
-            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to create admin', '');
-        }
+            throw new AppError(
+                StatusCodes.BAD_REQUEST,
+                'Failed to create admin'
+            );
+        };
 
         await session.commitTransaction();
         await session.endSession();
