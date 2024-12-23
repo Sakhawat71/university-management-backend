@@ -5,7 +5,7 @@ import { TChangePassword, TLoginUser } from "./auth.interface";
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import config from "../../config";
 import bcrypt from 'bcrypt';
-import { createToken } from "./auth.utils";
+import { checkIsUserValidByCustomID, createToken } from "./auth.utils";
 
 // login user
 const loginUser = async (payLoad: TLoginUser) => {
@@ -32,7 +32,7 @@ const loginUser = async (payLoad: TLoginUser) => {
     if (user.status === 'blocked') {
         throw new AppError(
             StatusCodes.BAD_REQUEST,
-            "User is bloack",
+            "User is Blocked",
             ''
         );
     };
@@ -56,14 +56,14 @@ const loginUser = async (payLoad: TLoginUser) => {
         JwtPayload,
         config.jwt_access_secret as string,
         config.jwt_access_expires_in as string,
-    )
+    );
 
     // Create jwt refreshToken
     const refreshToken = createToken(
         JwtPayload,
         config.jwt_refresh_secret as string,
         config.jwt_refresh_expires_in as string
-    )
+    );
 
     return {
         accessToken,
@@ -97,7 +97,7 @@ const changePassword = async (userData: JwtPayload, payLoad: TChangePassword) =>
     if (user.status === 'blocked') {
         throw new AppError(
             StatusCodes.BAD_REQUEST,
-            "User is bloack",
+            "User is Blocked",
             ''
         );
     };
@@ -164,7 +164,7 @@ const refreshToken = async (token: string) => {
     if (user.status === 'blocked') {
         throw new AppError(
             StatusCodes.BAD_REQUEST,
-            "User is bloack",
+            "User is Blocked",
             ''
         );
     };
@@ -196,15 +196,37 @@ const refreshToken = async (token: string) => {
         config.jwt_access_expires_in as string,
     )
 
-    return{
+    return {
         accessToken
     };
 };
 
+// forget passwrod
+const forgetPassword = async (userId: string) => {
 
+    const { success, user } = await checkIsUserValidByCustomID(userId);
+    console.log(success);
+
+    const JwtPayload = {
+        userId : user.id,
+        role : user.role,
+    };
+
+    // Create jwt access token
+    const resetToken = createToken(
+        JwtPayload,
+        config.jwt_access_secret as string,
+        '10m'
+    );
+
+    const resetUiLink = `http://localhost:5000?id=${user.id}&token=${resetToken}`;
+    console.log(resetUiLink);
+    return resetUiLink;
+};
 
 export const AuthService = {
     loginUser,
     changePassword,
     refreshToken,
+    forgetPassword,
 };

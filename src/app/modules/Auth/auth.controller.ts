@@ -4,6 +4,7 @@ import sendResponse from "../../utils/sendResponse";
 import { AuthService } from "./auth.service";
 import config from "../../config";
 
+// user login
 const loginUser = catchAsync(async (req, res) => {
     const result = await AuthService.loginUser(req.body);
     const { refreshToken, accessToken, needPasswrodChange } = result;
@@ -23,6 +24,7 @@ const loginUser = catchAsync(async (req, res) => {
     });
 });
 
+// change password
 const changeUserPassword = catchAsync(async (req, res) => {
     const { user, body } = req;
     const result = await AuthService.changePassword(user, body);
@@ -34,7 +36,7 @@ const changeUserPassword = catchAsync(async (req, res) => {
     });
 });
 
-
+// refresh Token
 const refreshToken = catchAsync(async (req, res) => {
 
     const { refreshToken } = req.cookies;
@@ -48,9 +50,25 @@ const refreshToken = catchAsync(async (req, res) => {
     });
 });
 
+// forget Password
+const forgetPassword = catchAsync(async (req, res) => {
+    const { id: userId } = req.params;
+
+    console.log(req.body);
+    console.log(userId);
+
+    const result = await AuthService.forgetPassword(userId);
+    sendResponse(res, {
+        success: true,
+        statusCode: StatusCodes.OK,
+        message: 'Reset link is generated successfully',
+        data: result,
+    })
+});
 
 export const AuthController = {
     loginUser,
     changeUserPassword,
-    refreshToken
+    refreshToken,
+    forgetPassword
 };
