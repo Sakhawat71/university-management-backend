@@ -206,10 +206,7 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
 };
 
 // get me
-const getMe = async (token: string) => {
-
-    const decoded = await tokenVerify(token as string);
-    const { userId, role } = decoded;
+const getMe = async (userId: string,role : string) => {
 
     let result = null;
     if(role === 'student'){
@@ -225,9 +222,12 @@ const getMe = async (token: string) => {
     return result; 
 };
 
+const changeStatus = async () => {};
+
 export const userService = {
     createStudentIntoDb,
     createFacultyIntoDB,
     createAdminIntoDB,
     getMe,
-}
+    changeStatus
+};

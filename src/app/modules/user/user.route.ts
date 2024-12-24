@@ -39,4 +39,11 @@ route.get(
     userController.getME
 );
 
+// block
+route.post(
+    '/change-status/:id',
+    authValidation('admin'),
+    userController.changeStatus
+);
+
 export const userRouter = route;
