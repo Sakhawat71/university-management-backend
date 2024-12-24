@@ -56,6 +56,7 @@ const createStudentIntoDb = async (
         // name file
         const imageName = `${user.id}_${payload.name.firstName}`;
         const path = file?.path;
+        console.log(path,imageName);
         // send image to cloudinary
         sendImageToCloudinary(imageName, path);
 

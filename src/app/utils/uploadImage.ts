@@ -2,31 +2,36 @@ import { v2 as cloudinary } from 'cloudinary';
 import config from '../config';
 import multer from 'multer';
 
+
+// Configuration
+cloudinary.config({
+    cloud_name: config.cloud_name,
+    api_key: config.cloud_api_key,
+    api_secret: config.cloud_api_secret,
+});
+
 export const sendImageToCloudinary = async (
     imageName: string,
     path: string
 ) => {
 
-    // Configuration
-    cloudinary.config({
-        cloud_name: config.cloud_name,
-        api_key: config.cloud_api_key,
-        api_secret: config.cloud_api_secret,
+    return new Promise((resolve, reject) => {
+        cloudinary.uploader.upload(
+            path,
+            { public_id: imageName },
+            function (error, result) {
+                if (error) {
+                    reject(error);
+                }
+                resolve(result);
+            }
+        );
     });
 
     // Upload an image
-    const uploadResult = await cloudinary.uploader
-        .upload(
-            path, {
-            public_id: imageName,
-        }
-        )
-        .catch((error) => {
-            console.log(error);
-        });
+    // const uploadResult = await
 
-    console.log(uploadResult);
-
+    // console.log(uploadResult);
 
 };
 
