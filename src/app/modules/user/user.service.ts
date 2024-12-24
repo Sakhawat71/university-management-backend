@@ -222,7 +222,13 @@ const getMe = async (userId: string,role : string) => {
     return result; 
 };
 
-const changeStatus = async () => {};
+const changeStatus = async (id: string , payLoad : object) => {
+    return await UserModel.findByIdAndUpdate(
+        id,
+        payLoad,
+        {new : true}
+    );
+};
 
 export const userService = {
     createStudentIntoDb,

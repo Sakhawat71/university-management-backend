@@ -6,6 +6,7 @@ import { createFacultyValidationSchema } from '../Faculty/faculty.validation';
 import { createAdminValidationSchema } from '../Admin/admin.validation';
 import authValidation from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
+import { userValidateSchema, userValidation } from './user.validation';
 
 const route = express.Router();
 
@@ -43,6 +44,7 @@ route.get(
 route.post(
     '/change-status/:id',
     authValidation('admin'),
+    validateRequest(userValidation.changeStatusValidationSchema),
     userController.changeStatus
 );
 

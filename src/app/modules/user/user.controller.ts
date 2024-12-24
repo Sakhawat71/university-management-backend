@@ -46,19 +46,26 @@ const createAdmin = catchAsync(async (req, res) => {
 
 // create get me
 const getME = catchAsync(async (req, res) => {
-    const {userId,role} = req.user;
-    const result = await userService.getMe(userId,role);
+    const { userId, role } = req.user;
+    const result = await userService.getMe(userId, role);
     sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,
         message: 'User is retrieved successfully',
         data: result,
     });
-}); 
+});
 
 // change status
-const changeStatus = catchAsync (async (req,res) => {
-    
+const changeStatus = catchAsync(async (req, res) => {
+    const { id } = req.params;
+    const result = await userService.changeStatus(id, req.body);
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Status changed successfully',
+        data: result,
+    });
 });
 
 
