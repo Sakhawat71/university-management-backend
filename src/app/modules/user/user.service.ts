@@ -17,7 +17,11 @@ import { AdminModel } from "../Admin/admin.model";
 import { sendImageToCloudinary } from '../../utils/uploadImage';
 
 // students
-const createStudentIntoDb = async (password: string, payload: IStudent) => {
+const createStudentIntoDb = async (
+    password: string,
+    payload: IStudent,
+    file: any
+) => {
 
     // create a user object
     const user: Partial<IUser> = {};
@@ -49,8 +53,11 @@ const createStudentIntoDb = async (password: string, payload: IStudent) => {
         // set Generated id
         user.id = await generateStudentId(admissionSemesterData as IAcademicSemester);
 
+        // name file
+        const imageName = `${user.id}_${payload.name.firstName}`;
+        const path = file?.path;
         // send image to cloudinary
-        sendImageToCloudinary();
+        sendImageToCloudinary(imageName, path);
 
         // Create a user
         const newUser = await UserModel.create([user], { session });
@@ -209,27 +216,27 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
 };
 
 // get me
-const getMe = async (userId: string,role : string) => {
+const getMe = async (userId: string, role: string) => {
 
     let result = null;
-    if(role === 'student'){
-        result = await StudentModel.findOne({id : userId})
+    if (role === 'student') {
+        result = await StudentModel.findOne({ id: userId })
     }
-    if(role === 'admin'){
-        result = await AdminModel.findOne({id : userId})
+    if (role === 'admin') {
+        result = await AdminModel.findOne({ id: userId })
     }
-    if(role === 'faculty'){
-        result = await FacultyModel.findOne({id : userId})
+    if (role === 'faculty') {
+        result = await FacultyModel.findOne({ id: userId })
     }
 
-    return result; 
+    return result;
 };
 
-const changeStatus = async (id: string , payLoad : object) => {
+const changeStatus = async (id: string, payLoad: object) => {
     return await UserModel.findByIdAndUpdate(
         id,
         payLoad,
-        {new : true}
+        { new: true }
     );
 };
 

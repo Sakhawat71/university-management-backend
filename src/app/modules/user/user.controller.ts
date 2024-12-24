@@ -6,8 +6,15 @@ import catchAsync from "../../utils/catchAsync";
 
 // create student 
 const createStudent = catchAsync(async (req, res) => {
-    const { password, student: studentData } = req.body;
-    const result = await userService.createStudentIntoDb(password, studentData);
+    const {
+        password,
+        student: studentData
+    } = req.body;
+    const result = await userService.createStudentIntoDb(
+        password,
+        studentData,
+        req.file
+    );
     sendResponse(res, {
         statusCode: StatusCodes.OK,
         success: true,

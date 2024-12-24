@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import { userController } from './user.controller';
 import validateRequest from '../../middlewares/validateRequest';
 import { createStudentValidateSchema } from '../student/student.zod-validate';
@@ -6,7 +6,8 @@ import { createFacultyValidationSchema } from '../Faculty/faculty.validation';
 import { createAdminValidationSchema } from '../Admin/admin.validation';
 import authValidation from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
-import { userValidateSchema, userValidation } from './user.validation';
+import { userValidation } from './user.validation';
+import { upload } from '../../utils/uploadImage';
 
 const route = express.Router();
 
@@ -14,6 +15,11 @@ const route = express.Router();
 route.post(
     '/create-student',
     authValidation(USER_ROLE.admin),
+    upload.single('file'),
+    (req: Request,res:Response,next: NextFunction) => {
+        req.body = JSON.parse(req.body.data)
+        next()
+    },
     validateRequest(createStudentValidateSchema),
     userController.createStudent
 );

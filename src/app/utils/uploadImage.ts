@@ -2,7 +2,10 @@ import { v2 as cloudinary } from 'cloudinary';
 import config from '../config';
 import multer from 'multer';
 
-export const sendImageToCloudinary = async () => {
+export const sendImageToCloudinary = async (
+    imageName: string,
+    path: string
+) => {
 
     // Configuration
     cloudinary.config({
@@ -14,8 +17,8 @@ export const sendImageToCloudinary = async () => {
     // Upload an image
     const uploadResult = await cloudinary.uploader
         .upload(
-            'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', {
-            public_id: 'shoes',
+            path, {
+            public_id: imageName,
         }
         )
         .catch((error) => {
@@ -30,7 +33,7 @@ export const sendImageToCloudinary = async () => {
 // use multer
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '/tmp/my-uploads')
+        cb(null, process.cwd() + '/uploads/')
     },
     filename: function (req, file, cb) {
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
