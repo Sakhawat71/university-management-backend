@@ -9,7 +9,7 @@ const findLastStudentId = async () => {
         .sort({ createdAt: -1 })
         .lean();
     return lastStudent?.id ? lastStudent.id : undefined;
-}
+};
 
 export const generateStudentId = async (payload: IAcademicSemester): Promise<string> => {
 
@@ -17,6 +17,7 @@ export const generateStudentId = async (payload: IAcademicSemester): Promise<str
     const lastStudentId = await findLastStudentId();
     const lastStudentYear = lastStudentId?.substring(0, 4);
     const lastStudentSemesterCode = lastStudentId?.substring(4, 6);
+
     const currentYear = payload.year;
     const currentSemesterCode = payload.code;
 

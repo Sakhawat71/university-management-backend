@@ -2,6 +2,7 @@ import { userService } from "./user.service";
 import sendResponse from "../../utils/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import catchAsync from "../../utils/catchAsync";
+import { tokenVerify } from "../Auth/auth.utils";
 
 
 
@@ -46,8 +47,26 @@ const createAdmin = catchAsync(async (req, res) => {
 });
 
 
+// create get me
+const getME = catchAsync(async (req, res) => {
+    const token = req.headers.authorization;
+
+    const decoded = await tokenVerify(token as string);
+    const {userId,role} = decoded;
+    console.log(userId,role);
+
+    // const result = await userService.getMe();
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Get Me',
+        // data: result,
+    });
+});
+
 export const userController = {
     createStudent,
     createFaculty,
     createAdmin,
+    getME
 }

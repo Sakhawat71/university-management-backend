@@ -53,8 +53,11 @@ const authValidation = (...requiredRoles: TUserRole[]) => {
 
 
         if(user.passwordChangedAt && UserModel.isJWTIssuedBeforePasswordChanged(user.passwordChangedAt,decoded.iat as number)){
-            throw new AppError(StatusCodes.UNAUTHORIZED,'You Are not Authorize','')
-        }
+            throw new AppError(
+                StatusCodes.UNAUTHORIZED,
+                'You Are not Authorized'
+            )
+        };
 
         if (requiredRoles && !requiredRoles.includes(decoded?.role)) {
             throw new AppError(
@@ -66,6 +69,6 @@ const authValidation = (...requiredRoles: TUserRole[]) => {
 
         req.user = decoded as JwtPayload;
         next()
-    })
+    });
 };
 export default authValidation;

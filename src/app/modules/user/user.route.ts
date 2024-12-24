@@ -6,10 +6,10 @@ import { createFacultyValidationSchema } from '../Faculty/faculty.validation';
 import { createAdminValidationSchema } from '../Admin/admin.validation';
 import authValidation from '../../middlewares/auth';
 import { USER_ROLE } from './user.constant';
-// import { zodStudentValidations } from '../student/student.zod-validate';
 
 const route = express.Router();
 
+// student
 route.post(
     '/create-student',
     authValidation(USER_ROLE.admin),
@@ -17,17 +17,26 @@ route.post(
     userController.createStudent
 );
 
+// faculty
 route.post(
     '/create-faculty',
     authValidation(USER_ROLE.admin),
     validateRequest(createFacultyValidationSchema),
     userController.createFaculty
-)
+);
 
+// admin
 route.post(
     '/create-admin',
     validateRequest(createAdminValidationSchema),
     userController.createAdmin
-)
+);
+
+// me 
+route.get(
+    '/me',
+    authValidation('student','admin','faculty'),
+    userController.getME
+);
 
 export const userRouter = route;

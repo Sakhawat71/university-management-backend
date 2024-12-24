@@ -204,9 +204,14 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
     }
 };
 
+// get me
+const getMe = async () => {
+    // return await  
+};
 
 export const userService = {
     createStudentIntoDb,
     createFacultyIntoDB,
     createAdminIntoDB,
+    getMe,
 }
