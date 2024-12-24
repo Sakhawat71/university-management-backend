@@ -54,11 +54,10 @@ const createStudentIntoDb = async (
         user.id = await generateStudentId(admissionSemesterData as IAcademicSemester);
 
         // name file
-        const imageName = `${user.id}_${payload.name.firstName}`;
+        const imageName = `${user?.id}_${payload?.name?.firstName}`;
         const path = file?.path;
-        console.log(path,imageName);
         // send image to cloudinary
-        sendImageToCloudinary(imageName, path);
+        const { secure_url } = await sendImageToCloudinary(imageName, path);
 
         // Create a user
         const newUser = await UserModel.create([user], { session });
@@ -66,11 +65,12 @@ const createStudentIntoDb = async (
             throw new AppError(
                 StatusCodes.BAD_REQUEST,
                 'Fail to create user'
-            )
+            );
         };
 
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id;
+        payload.profileImg = secure_url;
 
         // 
         const newStudent = await StudentModel.create([payload], { session });
