@@ -64,4 +64,5 @@ const courseFacultySchema = new Schema<TCourseFaculty>(
     }
 );
 
+// this is not for course 
 export const CourseFacultyModel = model<TCourseFaculty>('CourseFaculty', courseFacultySchema);

@@ -103,9 +103,9 @@ const enrolledCourseSchema = new Schema<TEnrolledCourse>({
     },
 });
 
-const EnrolledCourse = mongoose.model<TEnrolledCourse>(
+const EnrolledCourseModel = mongoose.model<TEnrolledCourse>(
     'EnrolledCourse',
     enrolledCourseSchema,
 );
 
-export default EnrolledCourse;
+export default EnrolledCourseModel;
