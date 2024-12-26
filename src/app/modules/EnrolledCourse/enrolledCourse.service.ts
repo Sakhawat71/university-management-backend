@@ -16,29 +16,39 @@ const createEnrolledCourseIntoDB = async (
     payload: TEnrolledCourse,
 ) => {
     /**
-     * Step1: Check if the offered cousres is exists
-     * Step2: Check if the student is already enrolled
-     * Step3: Check if the max credits exceed
-     * Step4: Create an enrolled course
-     */
+    * Step1: Check if the offered cousres is exists
+    * Step2: Check if the student is already enrolled
+    * Step3: Check if the max credits exceed
+    * Step4: Create an enrolled course
+    */
 
     const { offeredCourse } = payload;
 
     const isOfferedCourseExists = await OfferedCourseModel.findById(offeredCourse);
 
     if (!isOfferedCourseExists) {
-        throw new AppError(StatusCodes.NOT_FOUND, 'Offered course not found !');
-    }
+        throw new AppError(
+            StatusCodes.NOT_FOUND,
+            'Offered course not found !'
+        );
+    };
 
     if (isOfferedCourseExists.maxCapacity <= 0) {
-        throw new AppError(StatusCodes.BAD_GATEWAY, 'Room is full !');
-    }
+        throw new AppError(
+            StatusCodes.BAD_GATEWAY,
+            'Room is full !'
+        );
+    };
 
     const student = await StudentModel.findOne({ id: userId }, { _id: 1 });
 
     if (!student) {
-        throw new AppError(StatusCodes.NOT_FOUND, 'Student not found !');
-    }
+        throw new AppError(
+            StatusCodes.NOT_FOUND,
+            'Student not found !'
+        );
+    };
+
     const isStudentAlreadyEnrolled = await EnrolledCourse.findOne({
         semesterRegistration: isOfferedCourseExists?.semesterRegistration,
         offeredCourse,
@@ -46,8 +56,11 @@ const createEnrolledCourseIntoDB = async (
     });
 
     if (isStudentAlreadyEnrolled) {
-        throw new AppError(StatusCodes.CONFLICT, 'Student is already enrolled !');
-    }
+        throw new AppError(
+            StatusCodes.CONFLICT, 
+            'Student is already enrolled !'
+        );
+    };
 
     // check total credits exceeds maxCredit
     const course = await CourseModel.findById(isOfferedCourseExists.course);
@@ -146,6 +159,8 @@ const createEnrolledCourseIntoDB = async (
         throw new Error(err);
     }
 };
+
+// update
 const updateEnrolledCourseMarksIntoDB = async (
     facultyId: string,
     payload: Partial<TEnrolledCourse>,
