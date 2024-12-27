@@ -14,7 +14,7 @@ const superAdmin = {
 
 const seedSuperAdmin = async () => {
     //create super admin
-    const isSuperAdminExist = UserModel.findOne({role : USER_ROLE.superAdmin});
+    const isSuperAdminExist = await UserModel.findOne({role : USER_ROLE.superAdmin});
     if(!isSuperAdminExist){
         await UserModel.create(superAdmin)
     };
