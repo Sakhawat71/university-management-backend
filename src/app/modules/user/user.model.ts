@@ -9,10 +9,10 @@ const userSchema = new Schema<IUser, IUserModel>({
         required: true,
         unique: true,
     },
-    email : {
-        type : String,
-        required :true,
-        unique : true
+    email: {
+        type: String,
+        required: true,
+        unique: true
     },
     password: {
         type: String,
@@ -28,7 +28,7 @@ const userSchema = new Schema<IUser, IUserModel>({
     },
     role: {
         type: String,
-        enum: ["admin", "student", "faculty"],
+        enum: ["super-admin", "admin", "student", "faculty"],
         required: true
     },
     status: {
