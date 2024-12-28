@@ -1,8 +1,18 @@
+import { StatusCodes } from "http-status-codes";
+import AppError from "../../errors/appError";
+import { AcademicFacultyModel } from "../academicFaculty/academicFaculty.model";
 import IAcademicDepartment from "./academicDepartment.interface";
 import { AcademicDepartmentModel } from "./academicDepartment.model";
 
 // create 
 const createAcademicDepartmentIntoDB = async (payload: IAcademicDepartment) => {
+    const isAcademicFacultyExist = await AcademicFacultyModel.findById(payload.academicFaculty);
+    if(!isAcademicFacultyExist){
+        throw new AppError(
+            StatusCodes.NOT_FOUND,
+            'Academic Faculty not found'
+        )
+    };
     return await AcademicDepartmentModel.create(payload);
 };
 
