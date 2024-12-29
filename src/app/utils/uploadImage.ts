@@ -2,6 +2,8 @@ import { v2 as cloudinary } from 'cloudinary';
 import config from '../config';
 import multer from 'multer';
 import fs from 'fs'
+import AppError from '../errors/appError';
+import { StatusCodes } from 'http-status-codes';
 
 // Configuration
 cloudinary.config({
@@ -23,14 +25,20 @@ export const sendImageToCloudinary = async (
                 if (error) {
                     reject(error);
                 }
-                resolve(result);
+                if (result) {
+                    resolve(result);
+                } else {
+                    reject(new AppError(
+                        StatusCodes.NOT_FOUND,
+                        'Upload result is undefined'
+                    ));
+                }
 
                 // delete local file after send db
                 fs.unlink(path, (err) => {
                     if (err) {
                         reject(err)
                     }
-                    console.log('file is deleted');
                 })
             }
         );
