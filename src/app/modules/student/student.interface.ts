@@ -24,7 +24,7 @@ export interface ILocalGuardian {
 
 export interface IStudent {
     id: string;
-    user: Types.ObjectId | string; 
+    user: Types.ObjectId | string;
     // password: string; 
     name: IUserName;
     gender: 'male' | 'female' | 'other';
@@ -32,14 +32,14 @@ export interface IStudent {
     email: string;
     contactNo: string;
     emergencyContactNo: string;
-    bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-'; 
+    bloodGroup?: 'A+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O+' | 'O-';
     presentAddress: string;
     permanentAddress: string;
     guardian: IGuardian;
     localGuardian: ILocalGuardian;
     profileImg?: string;
-    admissionSemester : Types.ObjectId ;
-    academicDepartment : Types.ObjectId;
-    academicFaculty : Types.ObjectId;
+    admissionSemester: Types.ObjectId;
+    academicDepartment: Types.ObjectId;
+    academicFaculty: Types.ObjectId;
     isDeleted: boolean;
 };

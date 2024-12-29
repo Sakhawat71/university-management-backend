@@ -44,16 +44,14 @@ const createStudentIntoDb = async (
 
     // find department
     const academicdepartment = await AcademicDepartmentModel.findById(payload.academicDepartment);
-    if(!academicdepartment){
+    if (!academicdepartment) {
         throw new AppError(
             StatusCodes.NOT_FOUND,
             'Admission department not found'
         );
     };
-
     // add academic faculty 
     payload.academicFaculty = academicdepartment.academicFaculty;
-
 
     // implement transaction & rollback
     // create session
@@ -65,11 +63,15 @@ const createStudentIntoDb = async (
         // set Generated id
         user.id = await generateStudentId(admissionSemesterData as IAcademicSemester);
 
-        // name file
-        const imageName = `${user?.id}_${payload?.name?.firstName}`;
-        const path = file?.path;
-        // send image to cloudinary
-        const { secure_url } = await sendImageToCloudinary(imageName, path);
+        if (file) {
+            // name file
+            const imageName = `${user?.id}_${payload?.name?.firstName}`;
+            const path = file?.path;
+            // send image to cloudinary
+            const { secure_url } = await sendImageToCloudinary(imageName, path);
+            payload.profileImg = secure_url as string;
+        }
+
 
         // Create a user
         const newUser = await UserModel.create([user], { session });
@@ -82,7 +84,7 @@ const createStudentIntoDb = async (
 
         payload.id = newUser[0].id;
         payload.user = newUser[0]._id;
-        payload.profileImg = secure_url;
+
 
         // 
         const newStudent = await StudentModel.create([payload], { session });
