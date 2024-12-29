@@ -28,6 +28,11 @@ route.post(
 route.post(
     '/create-faculty',
     authValidation(USER_ROLE.superAdmin, USER_ROLE.admin),
+    upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = JSON.parse(req.body.data)
+        next()
+    },
     validateRequest(createFacultyValidationSchema),
     userController.createFaculty
 );
@@ -36,6 +41,11 @@ route.post(
 route.post(
     '/create-admin',
     authValidation(USER_ROLE.superAdmin, USER_ROLE.admin),
+    upload.single('file'),
+    (req: Request, res: Response, next: NextFunction) => {
+        req.body = JSON.parse(req.body.data)
+        next()
+    },
     validateRequest(createAdminValidationSchema),
     userController.createAdmin
 );
