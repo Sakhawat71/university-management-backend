@@ -108,7 +108,11 @@ const createStudentIntoDb = async (
 }
 
 // faculty
-const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
+const createFacultyIntoDB = async (
+    file: any,
+    password: string,
+    payload: TFaculty
+) => {
     // create a user object
     const userData: Partial<IUser> = {};
 
@@ -137,6 +141,15 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
         session.startTransaction();
         //set  generated id
         userData.id = await generateFacultyId();
+
+        if (file) {
+            // name file
+            const imageName = `${userData?.id}_${payload?.name?.firstName}`;
+            const path = file?.path;
+            // send image to cloudinary
+            const { secure_url } = await sendImageToCloudinary(imageName, path);
+            payload.profileImg = secure_url as string;
+        }
 
         // create a user (transaction-1)
         const newUser = await UserModel.create([userData], { session }); // array
@@ -176,7 +189,11 @@ const createFacultyIntoDB = async (password: string, payload: TFaculty) => {
 };
 
 // admin
-const createAdminIntoDB = async (password: string, payload: TFaculty) => {
+const createAdminIntoDB = async (
+    file: any,
+    password: string,
+    payload: TFaculty
+) => {
     // create a user object
     const userData: Partial<IUser> = {};
 
@@ -193,6 +210,15 @@ const createAdminIntoDB = async (password: string, payload: TFaculty) => {
         session.startTransaction();
         //set  generated id
         userData.id = await generateAdminId();
+
+        if (file) {
+            // name file
+            const imageName = `${userData?.id}_${payload?.name?.firstName}`;
+            const path = file?.path;
+            // send image to cloudinary
+            const { secure_url } = await sendImageToCloudinary(imageName, path);
+            payload.profileImg = secure_url as string;
+        }
 
         // create a user (transaction-1)
         const newUser = await UserModel.create([userData], { session });
