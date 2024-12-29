@@ -40,5 +40,6 @@ export interface IStudent {
     profileImg?: string;
     admissionSemester : Types.ObjectId ;
     academicDepartment : Types.ObjectId;
+    academicFaculty : Types.ObjectId;
     isDeleted: boolean;
 };

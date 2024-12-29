@@ -29,34 +29,41 @@ const LocalGuardianSchema = new Schema<ILocalGuardian>({
   address: { type: String, required: true },
 });
 
-const StudentSchema = new Schema<IStudent>({
-  id: { type: String, required: true, unique: true },
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  // password: { type: String, required: true },
-  name: { type: UserNameSchema, required: true },
-  gender: { type: String, enum: ["male", "female", "other"], required: true },
-  dateOfBirth: { type: String },
-  email: { type: String, required: true, unique: true },
-  contactNo: { type: String, required: true },
-  emergencyContactNo: { type: String, required: true },
-  bloodGroup: { type: String, enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] },
-  presentAddress: { type: String, required: true },
-  permanentAddress: { type: String, required: true },
-  guardian: { type: GuardianSchema, required: true },
-  localGuardian: { type: LocalGuardianSchema, required: true },
-  profileImg: { type: String },
-  admissionSemester: {
-    type: Schema.Types.ObjectId,
-    ref: 'AcademicSemester'
+const StudentSchema = new Schema<IStudent>(
+  {
+    id: { type: String, required: true, unique: true },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    // password: { type: String, required: true },
+    name: { type: UserNameSchema, required: true },
+    gender: { type: String, enum: ["male", "female", "other"], required: true },
+    dateOfBirth: { type: String },
+    email: { type: String, required: true, unique: true },
+    contactNo: { type: String, required: true },
+    emergencyContactNo: { type: String, required: true },
+    bloodGroup: { type: String, enum: ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"] },
+    presentAddress: { type: String, required: true },
+    permanentAddress: { type: String, required: true },
+    guardian: { type: GuardianSchema, required: true },
+    localGuardian: { type: LocalGuardianSchema, required: true },
+    profileImg: { type: String },
+    admissionSemester: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicSemester'
+    },
+    academicDepartment: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicDepartment'
+    },
+    academicFaculty: {
+      type: Schema.Types.ObjectId,
+      ref: 'AcademicFaculty'
+    },
+    isDeleted: { type: Boolean, default: false },
   },
-  academicDepartment : {
-    type: Schema.Types.ObjectId,
-    ref: 'AcademicDepartment'
-  },
-  isDeleted: { type: Boolean, default: false },
-}, {
-  timestamps: true,
-});
+  {
+    timestamps: true,
+  }
+);
 
 
 StudentSchema.pre('find', function (next) {
