@@ -79,8 +79,13 @@ const facultySchema = new Schema<TFaculty, FacultyInterfaceModel>(
         profileImg: { type: String, default: '' },
         academicDepartment: {
             type: Schema.Types.ObjectId,
-            required: [true, 'User id is required'],
-            ref: 'User',
+            required: [true, 'academicDepartment id is required'],
+            ref: 'AcademicDepartment',
+        },
+        academicFaculty: {
+            type: Schema.Types.ObjectId,
+            required: [true, 'academicFaculty id is required'],
+            ref: 'AcademicFaculty',
         },
         isDeleted: {
             type: Boolean,
