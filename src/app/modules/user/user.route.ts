@@ -35,7 +35,7 @@ route.post(
 // admin
 route.post(
     '/create-admin',
-    authValidation(USER_ROLE.superAdmin),
+    authValidation(USER_ROLE.superAdmin, USER_ROLE.admin),
     validateRequest(createAdminValidationSchema),
     userController.createAdmin
 );
@@ -43,7 +43,7 @@ route.post(
 // me 
 route.get(
     '/me',
-    authValidation('student', 'admin', 'faculty'),
+    authValidation('student', 'admin', 'faculty', 'superAdmin'),
     userController.getME
 );
 
