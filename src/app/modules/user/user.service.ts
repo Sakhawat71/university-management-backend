@@ -37,10 +37,22 @@ const createStudentIntoDb = async (
     const admissionSemesterData = await AcademicSemesterModel.findById(payload.admissionSemester);
     if (!admissionSemesterData) {
         throw new AppError(
-            StatusCodes.BAD_REQUEST,
+            StatusCodes.NOT_FOUND,
             'Admission semester not found'
         );
     };
+
+    // find department
+    const academicdepartment = await AcademicDepartmentModel.findById(payload.academicDepartment);
+    if(!academicdepartment){
+        throw new AppError(
+            StatusCodes.NOT_FOUND,
+            'Admission department not found'
+        );
+    };
+
+    // add academic faculty 
+    payload.academicFaculty = academicdepartment.academicFaculty;
 
 
     // implement transaction & rollback
