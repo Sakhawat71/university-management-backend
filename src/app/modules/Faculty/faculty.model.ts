@@ -56,7 +56,10 @@ const facultySchema = new Schema<TFaculty, FacultyInterfaceModel>(
             required: [true, 'Email is required'],
             unique: true,
         },
-        contactNo: { type: String, required: [true, 'Contact number is required'] },
+        contactNo: {
+            type: String,
+            required: [true, 'Contact number is required']
+        },
         emergencyContactNo: {
             type: String,
             required: [true, 'Emergency contact number is required'],
@@ -76,7 +79,10 @@ const facultySchema = new Schema<TFaculty, FacultyInterfaceModel>(
             type: String,
             required: [true, 'Permanent address is required'],
         },
-        profileImg: { type: String, default: '' },
+        profileImg: {
+            type: String,
+            default: ''
+        },
         academicDepartment: {
             type: Schema.Types.ObjectId,
             required: [true, 'academicDepartment id is required'],

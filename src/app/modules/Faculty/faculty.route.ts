@@ -8,6 +8,12 @@ import { USER_ROLE } from '../user/user.constant';
 const router = express.Router();
 
 router.get(
+    '/',
+    authValidation(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
+    FacultyControllers.getAllFaculties
+);
+
+router.get(
     '/:id',
     authValidation(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
     FacultyControllers.getSingleFaculty
@@ -23,12 +29,7 @@ router.patch(
 router.delete(
     '/:id',
     authValidation(USER_ROLE.superAdmin, USER_ROLE.admin),
-    FacultyControllers.deleteFaculty);
-
-router.get(
-    '/',
-    authValidation(USER_ROLE.superAdmin, USER_ROLE.admin, USER_ROLE.faculty),
-    FacultyControllers.getAllFaculties
+    FacultyControllers.deleteFaculty
 );
 
 export const FacultyRoutes = router;

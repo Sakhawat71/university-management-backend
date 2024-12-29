@@ -9,17 +9,19 @@ import { StatusCodes } from 'http-status-codes';
 import { UserModel } from '../user/user.model';
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
-    const facultyQuery = new QueryBuilder(
-        FacultyModel.find().populate('academicDepartment'),
-        query,
-    )
-        .search(FacultySearchableFields)
-        .filter()
-        .sort()
-        .paginate()
-        .fields();
+    // const facultyQuery = new QueryBuilder(
+    //     FacultyModel.find().populate('academicDepartment'),
+    //     query,
+    // )
+    //     .search(FacultySearchableFields)
+    //     .filter()
+    //     .sort()
+    //     .paginate()
+    //     .fields();
 
-    const result = await facultyQuery.modelQuery;
+    // const result = await facultyQuery.modelQuery;
+    const result = await FacultyModel.find();
+    console.log(result);
     return result;
 };
 
