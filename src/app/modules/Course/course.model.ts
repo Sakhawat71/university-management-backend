@@ -48,6 +48,11 @@ const courseSchema = new Schema<TCouser>({
 
 export const CourseModel = model<TCouser>('Course', courseSchema);
 
+
+
+
+
+// course assign for faculty
 const courseFacultySchema = new Schema<TCourseFaculty>(
     {
         course: {

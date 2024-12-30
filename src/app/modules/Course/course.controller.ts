@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import catchAsync from '../../utils/catchAsync';
 import { CourseServices } from './course.service';
 import sendResponse from '../../utils/sendResponse';
+import { CourseFacultyModel } from './course.model';
 
 // create 
 const createCourse = catchAsync(async (req, res) => {
@@ -84,6 +85,18 @@ const assignFacultiesWithCourse = catchAsync(async (req, res) => {
     });
 });
 
+// get assigned faculties
+const getallFacultiesWithCourse = catchAsync(async (req, res) => {
+    const id = req.params.courseId;
+    const result = await CourseServices.getAssignedFacultiesFromDB(id);
+    sendResponse(res, {
+        statusCode: StatusCodes.OK,
+        success: true,
+        message: 'Assigned Faculties retrieved succesfully',
+        data: result,
+    });
+});
+
 // remove faculties form courses
 const removeFacultiesFromCourse = catchAsync(async (req, res) => {
     const { courseId } = req.params;
@@ -109,5 +122,6 @@ export const CourseControllers = {
     updateCourse,
     deleteCourse,
     assignFacultiesWithCourse,
+    getallFacultiesWithCourse,
     removeFacultiesFromCourse,
 };
