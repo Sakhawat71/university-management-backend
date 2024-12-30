@@ -2,7 +2,6 @@ import { StatusCodes } from 'http-status-codes';
 import catchAsync from '../../utils/catchAsync';
 import { CourseServices } from './course.service';
 import sendResponse from '../../utils/sendResponse';
-import { CourseFacultyModel } from './course.model';
 
 // create 
 const createCourse = catchAsync(async (req, res) => {

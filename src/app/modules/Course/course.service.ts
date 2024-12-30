@@ -100,7 +100,10 @@ const updateCourseIntoDB = async (id: string, payLoad: TCouser) => {
     } catch (error) {
         await session.abortTransaction();
         await session.endSession();
-        throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to update course', '');
+        throw new AppError(
+            StatusCodes.BAD_REQUEST,
+            'Failed to update course'
+        );
     };
 };
 
@@ -132,8 +135,8 @@ const assignFacultiesWithCourseIntoDB = async (
 };
 
 // get all Assigned Faculties
-const getAssignedFacultiesFromDB = async (id : string) => {
-    return await CourseFacultyModel.find({course : id}).populate('faculties');
+const getAssignedFacultiesFromDB = async (id: string) => {
+    return await CourseFacultyModel.find({ course: id }).populate('faculties');
 };
 
 //remove faculties
@@ -144,10 +147,10 @@ const removeFacultiesFromCourseFromDB = async (
     return await CourseFacultyModel.findByIdAndUpdate(
         id,
         {
-            $pull : {faculties : {$in : payLoad}}
+            $pull: { faculties: { $in: payLoad } }
         },
         {
-            new : true
+            new: true
         }
     )
 };
