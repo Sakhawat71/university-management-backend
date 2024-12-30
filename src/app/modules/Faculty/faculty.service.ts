@@ -10,15 +10,14 @@ import { UserModel } from '../user/user.model';
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
     const facultyQuery = new QueryBuilder(
-        FacultyModel.find().populate('academicDepartment'),
+        FacultyModel.find().populate('academicDepartment').populate('academicFaculty'),
         query,
     )
         .search(FacultySearchableFields)
         .filter()
         .sort()
         .paginate()
-        .fields();
-
+        .fields()
     const result = await facultyQuery.modelQuery;
     return result;
 };
