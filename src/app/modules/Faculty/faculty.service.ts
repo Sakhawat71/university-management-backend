@@ -10,7 +10,10 @@ import { UserModel } from '../user/user.model';
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
     const facultyQuery = new QueryBuilder(
-        FacultyModel.find().populate('academicDepartment').populate('academicFaculty'),
+        FacultyModel
+            .find()
+            .populate('academicDepartment')
+            .populate('academicFaculty'),
         query,
     )
         .search(FacultySearchableFields)
@@ -23,7 +26,10 @@ const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
 };
 
 const getSingleFacultyFromDB = async (id: string) => {
-    const result = await FacultyModel.findById(id).populate('academicDepartment');
+    const result = await FacultyModel
+        .findById(id)
+        .populate('academicDepartment')
+        .populate('academicFaculty');
     return result;
 };
 
