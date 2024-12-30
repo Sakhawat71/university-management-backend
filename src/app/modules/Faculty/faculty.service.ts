@@ -9,19 +9,17 @@ import { StatusCodes } from 'http-status-codes';
 import { UserModel } from '../user/user.model';
 
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
-    // const facultyQuery = new QueryBuilder(
-    //     FacultyModel.find().populate('academicDepartment'),
-    //     query,
-    // )
-    //     .search(FacultySearchableFields)
-    //     .filter()
-    //     .sort()
-    //     .paginate()
-    //     .fields();
+    const facultyQuery = new QueryBuilder(
+        FacultyModel.find().populate('academicDepartment'),
+        query,
+    )
+        .search(FacultySearchableFields)
+        .filter()
+        .sort()
+        .paginate()
+        .fields();
 
-    // const result = await facultyQuery.modelQuery;
-    const result = await FacultyModel.find();
-    console.log(result);
+    const result = await facultyQuery.modelQuery;
     return result;
 };
 
@@ -63,7 +61,7 @@ const deleteFacultyFromDB = async (id: string) => {
         );
 
         if (!deletedFaculty) {
-            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to delete faculty','');
+            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to delete faculty', '');
         }
 
         // get user _id from deletedFaculty
@@ -76,7 +74,7 @@ const deleteFacultyFromDB = async (id: string) => {
         );
 
         if (!deletedUser) {
-            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to delete user','');
+            throw new AppError(StatusCodes.BAD_REQUEST, 'Failed to delete user', '');
         }
 
         await session.commitTransaction();
