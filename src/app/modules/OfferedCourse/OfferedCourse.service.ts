@@ -178,8 +178,8 @@ const getMyOfferedCoursesFromDB = async (
         {
             $match: {
                 semesterRegistration: currentOngoingSemester._id,
-                academicFaculty :  student.academicFaculty,
-                academicDepartment : student.academicDepartment,
+                academicFaculty: student.academicFaculty,
+                academicDepartment: student.academicDepartment,
             }
         },
         {
@@ -187,9 +187,62 @@ const getMyOfferedCoursesFromDB = async (
                 from: 'courses',
                 localField: 'course',
                 foreignField: '_id',
-                as : 'course'
+                as: 'course'
             }
-        }
+        },
+        {
+            $unwind: '$course'
+        },
+        {
+            $lookup: {
+                from: 'enrolledcourses',
+                let: {
+                    currentOngoingSemester: currentOngoingSemester._id,
+                    currentStudent: student._id,
+                },
+                pipeline: [
+                    {
+                        $match: {
+                            $expr: {
+                                $and: [
+                                    {
+                                        $eq: [
+                                            '$semesterRegistration',
+                                            '$$currentOngoingSemester'
+                                        ]
+                                    },
+                                    {
+                                        $eq: [
+                                            '$student',
+                                            '$$currentStudent'
+                                        ]
+                                    },
+                                    {
+                                        $eq: ['$isEnrolled', true]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                ],
+                as: 'enrolledCourses'
+            }
+        },
+        // {
+        //     $addFields: {
+        //         isAlreadyEnrolled: {
+        //             $in: [
+        //                 'course._id',
+        //                 {
+        //                     $map: {
+        //                         input: '$enrolledcourses',
+        //                         as: 'enroll',
+        //                         in: '$$enroll.courses'
+        //                     }
+        //                 }]
+        //         }
+        //     }
+        // }
     ]);
 
     return result
