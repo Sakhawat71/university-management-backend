@@ -15,8 +15,7 @@ const authValidation = (...requiredRoles: TUserRole[]) => {
         if (!token) {
             throw new AppError(
                 StatusCodes.UNAUTHORIZED,
-                "Unauthorized",
-                ''
+                "Unauthorized"
             );
         };
 
@@ -28,8 +27,7 @@ const authValidation = (...requiredRoles: TUserRole[]) => {
         if (!user) {
             throw new AppError(
                 StatusCodes.NOT_FOUND,
-                "User not found",
-                ''
+                "User not found"
             );
         };
 
@@ -37,8 +35,7 @@ const authValidation = (...requiredRoles: TUserRole[]) => {
         if (user.isDeleted) {
             throw new AppError(
                 StatusCodes.BAD_REQUEST,
-                "User is deleted",
-                ''
+                "User is deleted"
             );
         };
 
@@ -46,8 +43,7 @@ const authValidation = (...requiredRoles: TUserRole[]) => {
         if (user.status === 'blocked') {
             throw new AppError(
                 StatusCodes.BAD_REQUEST,
-                "User is bloack",
-                ''
+                "User is bloack"
             );
         };
 
@@ -62,8 +58,7 @@ const authValidation = (...requiredRoles: TUserRole[]) => {
         if (requiredRoles && !requiredRoles.includes(decoded?.role)) {
             throw new AppError(
                 StatusCodes.UNAUTHORIZED,
-                "You are not authorized",
-                ''
+                "You are not authorized"
             )
         };
 

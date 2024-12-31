@@ -55,8 +55,7 @@ const createOfferedCourseIntoDB = async (payLoad: TOfferedCourse) => {
     if (!isAcademicFacultyExist) {
         throw new AppError(
             StatusCodes.NOT_FOUND,
-            'academic Faculty not found !',
-            ''
+            'academic Faculty not found !'
         );
     };
 
@@ -143,8 +142,25 @@ const getAllOfferedCoursesFromDB = async (query: Record<string, unknown>) => {
         .fields();
 
     const result = await offeredCourseQuery.modelQuery;
-    return result;
+    const meta = await offeredCourseQuery.countTotal();
+    return {
+        meta,
+        result
+    };
 };
+
+// get my offered courses 
+const getMyOfferedCoursesFromDB = async (
+    id: string,
+    query: Record<string,unknown>
+) => {
+    console.log(id,query);
+
+    
+
+    return true
+};
+
 
 // get singel 
 const getSingleOfferedCourseFromDB = async (id: string) => {
@@ -252,9 +268,12 @@ const deleteOfferedCourseFromDB = async (id: string) => {
     return await OfferedCourseModel.findByIdAndDelete(id);
 };
 
+
+
 export const OfferedCourseServices = {
     createOfferedCourseIntoDB,
     getAllOfferedCoursesFromDB,
+    getMyOfferedCoursesFromDB,
     getSingleOfferedCourseFromDB,
     deleteOfferedCourseFromDB,
     updateOfferedCourseIntoDB,

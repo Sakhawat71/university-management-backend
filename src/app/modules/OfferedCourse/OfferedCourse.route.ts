@@ -28,6 +28,13 @@ route.get(
     OfferedCourseController.getAllOfferedCourse
 );
 
+// my offered course
+route.get(
+    '/my-offered-courses',
+    authValidation(USER_ROLE.student),
+    OfferedCourseController.getMyOfferedCourse
+);
+
 route.get(
     '/:id',
     authValidation(
