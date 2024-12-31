@@ -237,10 +237,15 @@ const getMyOfferedCoursesFromDB = async (
                             $map: {
                                 input: '$enrolledCourses',
                                 as: 'enroll',
-                                in: '$$enroll.courses'
+                                in: '$$enroll.course'
                             }
                         }]
                 }
+            }
+        },
+        {
+            $match : {
+                isAlreadyEnrolled : false,
             }
         }
     ]);
