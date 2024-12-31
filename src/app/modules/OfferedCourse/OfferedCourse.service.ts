@@ -228,21 +228,21 @@ const getMyOfferedCoursesFromDB = async (
                 as: 'enrolledCourses'
             }
         },
-        // {
-        //     $addFields: {
-        //         isAlreadyEnrolled: {
-        //             $in: [
-        //                 'course._id',
-        //                 {
-        //                     $map: {
-        //                         input: '$enrolledcourses',
-        //                         as: 'enroll',
-        //                         in: '$$enroll.courses'
-        //                     }
-        //                 }]
-        //         }
-        //     }
-        // }
+        {
+            $addFields: {
+                isAlreadyEnrolled: {
+                    $in: [
+                        '$course._id',
+                        {
+                            $map: {
+                                input: '$enrolledCourses',
+                                as: 'enroll',
+                                in: '$$enroll.courses'
+                            }
+                        }]
+                }
+            }
+        }
     ]);
 
     return result
