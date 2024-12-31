@@ -243,7 +243,23 @@ const updateEnrolledCourseMarksIntoDB = async (
     return result;
 };
 
+
+const getMyEnrolledCoursesFromDB = async (userId: string) => {
+
+    const student = await StudentModel.findOne({ id: userId }, { _id: 1 });
+    if (!student) {
+        throw new AppError(StatusCodes.NOT_FOUND, 'Student not found !');
+    }
+
+    const result = await EnrolledCourse.find({ student: student._id })
+        .populate('course faculty offeredCourse semesterRegistration academicSemester academicFaculty academicDepartment')
+
+    return result;
+}
+
+
 export const EnrolledCourseServices = {
     createEnrolledCourseIntoDB,
     updateEnrolledCourseMarksIntoDB,
+    getMyEnrolledCoursesFromDB,
 };
