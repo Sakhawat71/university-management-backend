@@ -231,14 +231,14 @@ const getMyOfferedCoursesFromDB = async (
         {
             $lookup: {
                 from: 'enrolledcourses',
-                let: {currentStudent: student._id,},
+                let: { currentStudent: student._id, },
                 pipeline: [
                     {
                         $match: {
                             $expr: {
                                 $and: [
                                     {
-                                        $eq : ['$student','$$currentStudent']
+                                        $eq: ['$student', '$$currentStudent']
                                     },
                                     {
                                         $eq: ['$isCompleted', true]
@@ -248,7 +248,18 @@ const getMyOfferedCoursesFromDB = async (
                         }
                     }
                 ],
-                as : 'completedCourses'
+                as: 'completedCourses'
+            }
+        },
+        {
+            $addFields: {
+                completedCourseIds: {
+                    $map: {
+                        input: '$completedCourses',
+                        as: 'completed',
+                        in: '$$completed.course'
+                    }
+                }
             }
         },
         {
