@@ -31,7 +31,6 @@ academicDepartmentSchema.pre("save", async function (next) {
             throw new AppError(
                 StatusCodes.BAD_REQUEST,
                 "This department already exists!",
-                ""
             );
         };
         next();
