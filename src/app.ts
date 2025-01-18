@@ -6,9 +6,15 @@ import notFound from './app/middlewares/notFound';
 import router from './app/router';
 import cookieParser from 'cookie-parser';
 
+const corsOptions = {
+    origin: 'http://localhost:5173',
+    credentials: true,
+};
+
+
 app.use(express.json());
 app.use(cookieParser())
-app.use(cors({origin : 'http://localhost:5173'} ));
+app.use(cors(corsOptions));
 
 app.use('/api/v1', router);
 
@@ -20,11 +26,11 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // console.log(z);
-app.get("/test", async(req: Request, res: Response) => {
+app.get("/test", async (req: Request, res: Response) => {
 
     // Promise.reject(new Error('Simulated Unhandled Rejection'));
     // console.log(x);
-    const a : string = 'testing....'
+    const a: string = 'testing....'
     res.send(a);
 });
 
