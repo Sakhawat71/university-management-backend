@@ -22,6 +22,12 @@ const authValidation = (...requiredRoles: TUserRole[]) => {
         // check if the token is valid
         const decoded = jwt.verify(token, config.jwt_access_secret as string) as JwtPayload;
 
+        if(!decoded){
+            throw new AppError(
+                StatusCodes.UNAUTHORIZED,
+                'You are not authorized'
+            )
+        };
 
         const user = await UserModel.isUserExistsByCustomId(decoded.userId);
         if (!user) {
